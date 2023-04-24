@@ -7,10 +7,56 @@
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 #include <QMouseEvent>
+#include <QClipboard>
+#include <QImage>
+#include <QDragEnterEvent>
+#include <QDropEvent>
+#include <QUrl>
+#include <QMimeData>
+#include <QFileInfo>
+#include <QFile>
 
 void setupTitleBar(QFrame *titleBar, QWidget *parent);
 QPushButton *createTitleBarButton(const QString &text, QWidget *parent);
 QFrame *createGripBar(QWidget *parent);
+
+class ImageDropArea : public QLabel {
+public:
+    ImageDropArea(QWidget *parent = nullptr) : QLabel(parent) {
+        setAcceptDrops(true);
+        setAlignment(Qt::AlignCenter);
+        setText("Drop .png file here, to save as pasta.png");
+        setFrameStyle(QFrame::Box | QFrame::Sunken);
+    }
+
+protected:
+    void dragEnterEvent(QDragEnterEvent *event) override {
+        if (event->mimeData()->hasUrls()) {
+            event->acceptProposedAction();
+        }
+    }
+
+    void dropEvent(QDropEvent *event) override {
+        const QMimeData *mimeData = event->mimeData();
+        if (mimeData->hasUrls()) {
+            QList<QUrl> urlList = mimeData->urls();
+            for (const QUrl &url : urlList) {
+                QFileInfo fileInfo(url.toLocalFile());
+                if (fileInfo.suffix().toLower() == "png") {
+                    QFile file(url.toLocalFile());
+                    QString buildPath = QApplication::applicationDirPath() + "/pasta.png";
+                    QFile oldFile(buildPath);
+                    if (oldFile.exists()) {
+                        oldFile.remove();
+                    }
+                    file.copy(buildPath);
+                    setText("File saved as pasta.png");
+                    break;
+                }
+            }
+        }
+    }
+};
 
 class CustomWindow : public QWidget {
 public:
@@ -25,26 +71,62 @@ public:
         QVBoxLayout *contentLayout = new QVBoxLayout(contentWidget);
         contentLayout->addWidget(new QLabel("This is content", contentWidget));
 
+        // Create the first button
+        QPushButton *copyButton1 = new QPushButton("Copy 'hello pasta'", contentWidget);
+        contentLayout->addWidget(copyButton1);
+        connect(copyButton1, &QPushButton::clicked, this, [=]() { copyTextToClipboard("hello pasta"); });
+
+        // Create the second button
+        QPushButton *copyButton2 = new QPushButton("Copy 'hello over'", contentWidget);
+        contentLayout->addWidget(copyButton2);
+        connect(copyButton2, &QPushButton::clicked, this, [=]() { copyTextToClipboard("hello over"); });
+
+        // Create the image copy button
+        QPushButton *copyImageButton = new QPushButton("Copy 'pasta.png' image", contentWidget);
+        contentLayout->addWidget(copyImageButton);
+        connect(copyImageButton, &QPushButton::clicked, this, &CustomWindow::copyImageToClipboard);
+
+        // Create the image drop area
+        ImageDropArea *dropArea = new ImageDropArea(contentWidget);
+        contentLayout->addWidget(dropArea);
+
         QVBoxLayout *mainLayout = new QVBoxLayout(this);
-        mainLayout->setContentsMargins(0, 0, 0, 0); // Lisää tämä rivi poistaaksesi ylimääräisen sisennyksen
+        mainLayout->setContentsMargins(0, 0, 0, 0);
         mainLayout->addWidget(titleBar);
         mainLayout->addWidget(contentWidget, 1);
 
-        setWindowState(Qt::WindowMaximized);
+        setFixedSize(500, 500);
     }
 
 protected:
     void mousePressEvent(QMouseEvent *event) override {
         if (event->button() == Qt::LeftButton) {
-            m_dragPosition = event->globalPos() - frameGeometry().topLeft();
+            m_dragPosition = event->globalPosition().toPoint() - frameGeometry().topLeft();
             event->accept();
         }
     }
 
     void mouseMoveEvent(QMouseEvent *event) override {
-        if (event->buttons() & Qt::LeftButton) {
-            move(event->globalPos() - m_dragPosition);
+        if (event->buttons() & Qt::MouseButton::LeftButton) {
+            move(event->globalPosition().toPoint() - m_dragPosition);
             event->accept();
+        }
+    }
+
+private slots:
+    void copyTextToClipboard(const QString &text) {
+        QClipboard *clipboard = QApplication::clipboard();
+        clipboard->setText(text);
+    }
+
+    void copyImageToClipboard() {
+        QString imagePath = QApplication::applicationDirPath() + "/pasta.png";
+        QImage image(imagePath);
+        if (!image.isNull()) {
+            QClipboard *clipboard = QApplication::clipboard();
+            clipboard->setImage(image);
+        } else {
+            qDebug("Failed to load image.");
         }
     }
 
@@ -72,7 +154,7 @@ void setupTitleBar(QFrame *titleBar, QWidget *parent) {
     QObject::connect(minimizeButton, &QPushButton::clicked, parent, &QWidget::showMinimized);
     QPushButton *restoreButton = createTitleBarButton("□", parent);
 
-    QObject::connect(restoreButton, &QPushButton::clicked, [parent](){
+    QObject::connect(restoreButton, &QPushButton::clicked, parent, [parent]() {
         if (parent->isMaximized()) {
             parent->showNormal();
         } else {
