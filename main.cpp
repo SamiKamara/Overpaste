@@ -102,14 +102,14 @@ public:
 
 protected:
     void mousePressEvent(QMouseEvent *event) override {
-        if (event->button() == Qt::LeftButton) {
+        if (event->button() == Qt::LeftButton && event->pos().y() < 50) {
             m_dragPosition = event->globalPosition().toPoint() - frameGeometry().topLeft();
             event->accept();
         }
     }
 
     void mouseMoveEvent(QMouseEvent *event) override {
-        if (event->buttons() & Qt::MouseButton::LeftButton) {
+        if (event->buttons() & Qt::MouseButton::LeftButton && event->pos().y() < 50) {
             move(event->globalPosition().toPoint() - m_dragPosition);
             event->accept();
         }
