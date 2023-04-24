@@ -15,6 +15,8 @@
 #include <QMimeData>
 #include <QFileInfo>
 #include <QFile>
+#include <QtSvg/QSvgRenderer>
+#include <QPainter>
 
 void setupTitleBar(QFrame *titleBar, QWidget *parent);
 QPushButton *createTitleBarButton(const QString &text, QWidget *parent);
@@ -145,42 +147,72 @@ int main(int argc, char *argv[])
 }
 
 void setupTitleBar(QFrame *titleBar, QWidget *parent) {
-    titleBar->setFixedHeight(30);
-    titleBar->setStyleSheet("background-color: #007acc;");
+    titleBar->setFixedHeight(50);
+    titleBar->setStyleSheet("background-color: #21252b;");
 
-    QPushButton *closeButton = createTitleBarButton("X", parent);
+    QPushButton *closeButton = createTitleBarButton(":/icons/window-close.svg", parent);
     QObject::connect(closeButton, &QPushButton::clicked, parent, &QWidget::close);
-    QPushButton *minimizeButton = createTitleBarButton("-", parent);
-    QObject::connect(minimizeButton, &QPushButton::clicked, parent, &QWidget::showMinimized);
-    QPushButton *restoreButton = createTitleBarButton("□", parent);
 
-    QObject::connect(restoreButton, &QPushButton::clicked, parent, [parent]() {
+    QPushButton *minimizeButton = createTitleBarButton(":/icons/window-minimize.svg", parent);
+    QObject::connect(minimizeButton, &QPushButton::clicked, parent, &QWidget::showMinimized);
+
+    QPushButton *restoreButton = createTitleBarButton(parent->isMaximized() ? ":/icons/window-restore.svg" : ":/icons/window-maximize.svg", parent);
+    QObject::connect(restoreButton, &QPushButton::clicked, parent, [parent, restoreButton]() {
         if (parent->isMaximized()) {
             parent->showNormal();
+            restoreButton->setIcon(QIcon::fromTheme(":/icons/window-maximize.svg"));
         } else {
             parent->showMaximized();
+            restoreButton->setIcon(QIcon::fromTheme(":/icons/window-restore.svg"));
         }
     });
+
 
     QFrame *gripBar = createGripBar(parent);
 
     QHBoxLayout *titleLayout = new QHBoxLayout(titleBar);
     titleLayout->addWidget(gripBar, 1);
-    titleLayout->addWidget(minimizeButton, 0, Qt::AlignRight | Qt::AlignTop);
-    titleLayout->addWidget(restoreButton, 0, Qt::AlignRight | Qt::AlignTop);
-    titleLayout->addWidget(closeButton, 0, Qt::AlignRight | Qt::AlignTop);
-    titleLayout->setContentsMargins(0, 0, 0, 0);
+
+    QSpacerItem* verticalSpacer = new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Minimum);
+    titleLayout->addItem(verticalSpacer);
+
+    titleLayout->addWidget(minimizeButton, 0, Qt::AlignCenter);
+    titleLayout->addWidget(restoreButton, 0, Qt::AlignRight);
+    titleLayout->addWidget(closeButton, 0, Qt::AlignRight);
+    titleLayout->setContentsMargins(0, 0, 10, 0);
 }
 
-QPushButton *createTitleBarButton(const QString &text, QWidget *parent) {
-    QPushButton *button = new QPushButton(text, parent);
-    button->setStyleSheet("color: #ffffff; font-size: 16px; background-color: #007acc; border: none;");
-    button->setFixedSize(25, 25);
+// Function to create title bar button with SVG icon
+QPushButton* createTitleBarButton(const QString& iconPath, QWidget* parent)
+{
+    QPushButton* button = new QPushButton(parent);
+    button->setFixedSize(32, 32);
+
+    // If close button, change the hover and pressed colors
+    const QString baseStyleSheet = "QPushButton { border: none; border-radius: 5px; }";
+    const QString hoverColor = iconPath == ":/icons/window-close.svg" ? "#ff5f56" : "#393d47";
+    const QString pressedColor = iconPath == ":/icons/window-close.svg" ? "#e81123" : "#2a2e37";
+
+    button->setStyleSheet(baseStyleSheet +
+                          "QPushButton:hover { background-color: " + hoverColor + "; }"
+                          "QPushButton:pressed { background-color: " + pressedColor + "; }");
+
+
+    // Load the SVG file and render it onto a QPixmap
+    QSvgRenderer renderer(iconPath);
+    QPixmap pixmap(32, 32);
+    pixmap.fill(Qt::transparent);
+    QPainter painter(&pixmap);
+    renderer.render(&painter);
+
+    // Set the pixmap as the button icon
+    button->setIcon(QIcon(pixmap));
+
     return button;
 }
 
 QFrame *createGripBar(QWidget *parent) {
     QFrame *gripBar = new QFrame(parent);
-    gripBar->setStyleSheet("background-color: #007acc;");
+    gripBar->setStyleSheet("background-color: #21252b;");
     return gripBar;
 }

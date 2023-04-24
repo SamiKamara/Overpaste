@@ -1,4 +1,5 @@
 QT       += core gui
+QT += svg
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -17,6 +18,9 @@ HEADERS += \
 
 FORMS += \
     mainwindow.ui
+
+RESOURCES += resources.qrc \
+    resources.qrc
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
