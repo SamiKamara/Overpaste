@@ -21,25 +21,50 @@ Sidebar::Sidebar(QWidget *parent)
     buttonLayout->setContentsMargins(0, 0, 0, 0);
     buttonLayout->setSpacing(0);
 
+    const QString buttonStyle = "QPushButton { text-align: left; color: #fff; background-color: #21252b; border: none; padding: 10px; font-size: 14px; font-weight: 700; }" \
+        "QPushButton:hover { background-color: #393d47; }";
+
     // Add buttons to the sidebar
     QIcon imagesIcon(":/icons/images.svg");
-    QPushButton *imagesButton = new QPushButton(imagesIcon, "Images", this);
-    imagesButton->setStyleSheet("text-align: left; color: #fff; background-color: #21252b; border: none; padding: 10px;");
+    QPixmap imagesPixmap = imagesIcon.pixmap(QSize(22, 22));
+    QPushButton *imagesButton = new QPushButton(this);
+    imagesButton->setIcon(QIcon(imagesPixmap)); // Set the icon of the button
+    imagesButton->setIconSize(imagesPixmap.size()); // Set the size of the icon
+    imagesButton->setText("Images");
+    imagesButton->setCursor(Qt::PointingHandCursor);
+    imagesButton->setStyleSheet(buttonStyle);
     buttonLayout->addWidget(imagesButton);
 
+
     QIcon gifsIcon(":/icons/images.svg");
-    QPushButton *gifsButton = new QPushButton(gifsIcon, "GIFs", this);
-    gifsButton->setStyleSheet("text-align: left; color: #fff; background-color: #21252b; border: none; padding: 10px;");
+    QPixmap gifsPixmap = gifsIcon.pixmap(QSize(22, 22));
+    QPushButton *gifsButton = new QPushButton(this);
+    gifsButton->setIcon(QIcon(gifsPixmap)); // Set the icon of the button
+    gifsButton->setIconSize(gifsPixmap.size()); // Set the size of the icon
+    gifsButton->setText("GIFs");
+    gifsButton->setCursor(Qt::PointingHandCursor);
+    gifsButton->setStyleSheet(buttonStyle);
     buttonLayout->addWidget(gifsButton);
+    
 
     QIcon textsIcon(":/icons/images.svg");
-    QPushButton *textsButton = new QPushButton(textsIcon, "Texts", this);
-    textsButton->setStyleSheet("text-align: left; color: #fff; background-color: #21252b; border: none; padding: 10px;");
+    QPixmap textsPixmap = textsIcon.pixmap(QSize(22, 22));
+    QPushButton *textsButton = new QPushButton(this);
+    textsButton->setIcon(QIcon(textsPixmap)); // Set the icon of the button
+    textsButton->setIconSize(textsPixmap.size()); // Set the size of the icon
+    textsButton->setText("Texts");
+    textsButton->setCursor(Qt::PointingHandCursor);
+    textsButton->setStyleSheet(buttonStyle);
     buttonLayout->addWidget(textsButton);
 
     QIcon videosIcon(":/icons/images.svg");
-    QPushButton *videosButton = new QPushButton(videosIcon, "Videos", this);
-    videosButton->setStyleSheet("text-align: left; color: #fff; background-color: #21252b; border: none; padding: 10px;");
+    QPixmap videosPixmap = videosIcon.pixmap(QSize(22, 22));
+    QPushButton *videosButton = new QPushButton(this);
+    videosButton->setIcon(QIcon(videosPixmap)); // Set the icon of the button
+    videosButton->setIconSize(videosPixmap.size()); // Set the size of the icon
+    videosButton->setText("Videos");
+    videosButton->setCursor(Qt::PointingHandCursor);
+    videosButton->setStyleSheet(buttonStyle);
     buttonLayout->addWidget(videosButton);
 
     // Add a spacer at the bottom of the button layout to push buttons to the top
