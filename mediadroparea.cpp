@@ -30,7 +30,7 @@ void MediaDropArea::dropEvent(QDropEvent *event) {
                 copyFileToPath(url.toLocalFile(), buildPath);
 
                 if (fileSuffix == "png") {
-                    QString pastaPath = getImagesFolderPath() + "/pasta." + fileSuffix;
+                    QString pastaPath = targetFolderPath + "/pasta." + fileSuffix;
                     copyFileToPath(url.toLocalFile(), pastaPath);
                 }
 
@@ -51,17 +51,17 @@ bool MediaDropArea::isSupportedFileFormat(const QString &fileSuffix) {
 }
 
 QString MediaDropArea::getTargetFolderPath(const QString &fileSuffix) {
-    if (fileSuffix == "gif") {
-        return QApplication::applicationDirPath() + "/gifs";
-    } else if (fileSuffix == "mp4") {
-        return QApplication::applicationDirPath() + "/videos";
-    } else {
-        return getImagesFolderPath();
-    }
-}
+    QString targetFolderPath = QApplication::applicationDirPath();
 
-QString MediaDropArea::getImagesFolderPath() {
-    return QApplication::applicationDirPath() + "/images";
+    if (fileSuffix == "gif") {
+        targetFolderPath += "/files/gifs";
+    } else if (fileSuffix == "mp4") {
+        targetFolderPath += "/files/videos";
+    } else {
+        targetFolderPath += "/files/images";
+    }
+
+    return targetFolderPath;
 }
 
 void MediaDropArea::createFolderIfNotExists(const QString &folderPath) {
