@@ -9,6 +9,7 @@
 #include <QFileInfo>
 #include <QFile>
 #include <QApplication>
+#include <QDir>
 
 class MediaDropArea : public QLabel {
 public:

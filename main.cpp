@@ -65,6 +65,7 @@ public:
         splitter->addWidget(contentWidget);
 
         QVBoxLayout *mainLayout = new QVBoxLayout(this);
+        mainLayout->setSpacing(0);
         mainLayout->addWidget(titleBar);
         mainLayout->addWidget(splitter);
         mainLayout->setContentsMargins(0, 0, 0, 0);
