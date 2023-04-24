@@ -17,6 +17,8 @@
 #include <QFile>
 #include <QtSvg/QSvgRenderer>
 #include <QPainter>
+#include <sidebar.hh>
+#include <QSplitter>
 #include <mediadroparea.hh>
 
 void setupTitleBar(QFrame *titleBar, QWidget *parent);
@@ -32,7 +34,12 @@ public:
         QFrame *titleBar = new QFrame(this);
         setupTitleBar(titleBar, this);
 
-        QWidget *contentWidget = new QWidget(this);
+        QWidget *sidebar = new Sidebar(this);
+
+        QSplitter *splitter = new QSplitter(Qt::Horizontal, this);
+        splitter->addWidget(sidebar);
+
+        QWidget *contentWidget = new QWidget(splitter);
         QVBoxLayout *contentLayout = new QVBoxLayout(contentWidget);
         contentLayout->addWidget(new QLabel("This is content", contentWidget));
 
@@ -52,15 +59,17 @@ public:
         connect(copyImageButton, &QPushButton::clicked, this, &CustomWindow::copyImageToClipboard);
 
         // Create the image drop area
-        ImageDropArea *dropArea = new ImageDropArea(contentWidget);
+        MediaDropArea *dropArea = new MediaDropArea(contentWidget);
         contentLayout->addWidget(dropArea);
+
+        splitter->addWidget(contentWidget);
 
         QVBoxLayout *mainLayout = new QVBoxLayout(this);
         mainLayout->setContentsMargins(0, 0, 0, 0);
         mainLayout->addWidget(titleBar);
-        mainLayout->addWidget(contentWidget, 1);
+        mainLayout->addWidget(splitter, 1);
 
-        setFixedSize(500, 500);
+        setFixedSize(800, 500);
     }
 
 protected:
