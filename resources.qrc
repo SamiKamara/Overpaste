@@ -1,0 +1,8 @@
+<RCC>
+    <qresource>
+        <file>icons/window-close.svg</file>
+        <file>icons/window-maximize.svg</file>
+        <file>icons/window-minimize.svg</file>
+        <file>icons/window-restore.svg</file>
+    </qresource>
+</RCC>
