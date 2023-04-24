@@ -1,17 +1,22 @@
-#ifndef SIDEBAR_H
-#define SIDEBAR_H
+#ifndef SIDEBAR_HH
+#define SIDEBAR_HH
 
 #include <QWidget>
 #include <QVBoxLayout>
-#include <QListWidget>
+#include <QHBoxLayout>
+#include <QPushButton>
+#include <QSpacerItem>
 
-class Sidebar : public QWidget {
+class Sidebar : public QWidget
+{
     Q_OBJECT
+
 public:
-    Sidebar(QWidget *parent = nullptr);
+    explicit Sidebar(QWidget *parent = nullptr);
 
 private:
-    QListWidget *listWidget;
+    QVBoxLayout *sidebarLayout;
+
 };
 
-#endif // SIDEBAR_H
+#endif // SIDEBAR_HH
