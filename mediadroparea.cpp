@@ -19,33 +19,83 @@ void MediaDropArea::dropEvent(QDropEvent *event) {
         QList<QUrl> urlList = mimeData->urls();
         for (const QUrl &url : urlList) {
             QFileInfo fileInfo(url.toLocalFile());
-            if (fileInfo.suffix().toLower() == "png") {
-                QFile file(url.toLocalFile());
-                QString originalFilename = fileInfo.fileName(); // Get the original filename
+            QString fileSuffix = fileInfo.suffix().toLower();
 
-                QString imagesFolderPath = QApplication::applicationDirPath() + "/Images"; // Get the "Images" folder path in the current save location
-                QDir imagesDir(imagesFolderPath);
-                if (!imagesDir.exists()) {
-                    imagesDir.mkpath("."); // Create the "Images" folder if it doesn't exist
+            if (isSupportedFileFormat(fileSuffix)) {
+                QString originalFilename = fileInfo.fileName();
+                QString targetFolderPath = getTargetFolderPath(fileSuffix);
+                QString buildPath = targetFolderPath + "/" + originalFilename;
+
+                createFolderIfNotExists(targetFolderPath);
+                copyFileToPath(url.toLocalFile(), buildPath);
+
+                if (fileSuffix == "png") {
+                    QString pastaPath = getImagesFolderPath() + "/pasta." + fileSuffix;
+                    copyFileToPath(url.toLocalFile(), pastaPath);
                 }
 
-                QString buildPath = imagesFolderPath + "/" + originalFilename; // Save the file in the "Images" folder
-                QFile oldFile(buildPath);
-                if (oldFile.exists()) {
-                    oldFile.remove();
-                }
-                file.copy(buildPath); // Save the file with its original name
-
-                QString pastaPath = imagesFolderPath + "/pasta.png";
-                QFile pastaFile(pastaPath);
-                if (pastaFile.exists()) {
-                    pastaFile.remove();
-                }
-                file.copy(pastaPath); // Save another copy of the file as "pasta.png"
-
-                setText("File saved as " + originalFilename + " and pasta.png in Images folder"); // Display the original filename and "pasta.png" in the message
+                setText(getSavedMediaFileMessage(originalFilename, fileSuffix));
                 break;
             }
         }
     }
+}
+
+bool MediaDropArea::isSupportedFileFormat(const QString &fileSuffix) {
+    return (fileSuffix == "png"     ||
+            fileSuffix == "jpg"     ||
+            fileSuffix == "jpeg"    ||
+            fileSuffix == "gif"     ||
+            fileSuffix == "bmp"     ||
+            fileSuffix == "mp4");
+}
+
+QString MediaDropArea::getTargetFolderPath(const QString &fileSuffix) {
+    if (fileSuffix == "gif") {
+        return QApplication::applicationDirPath() + "/gifs";
+    } else if (fileSuffix == "mp4") {
+        return QApplication::applicationDirPath() + "/videos";
+    } else {
+        return getImagesFolderPath();
+    }
+}
+
+QString MediaDropArea::getImagesFolderPath() {
+    return QApplication::applicationDirPath() + "/images";
+}
+
+void MediaDropArea::createFolderIfNotExists(const QString &folderPath) {
+    QDir dir(folderPath);
+    if (!dir.exists()) {
+        dir.mkpath(".");
+    }
+}
+
+void MediaDropArea::copyFileToPath(const QString &sourcePath, const QString &destinationPath) {
+    QFile oldFile(destinationPath);
+    if (oldFile.exists()) {
+        oldFile.remove();
+    }
+
+    QFile file(sourcePath);
+    file.copy(destinationPath);
+}
+
+QString MediaDropArea::getSavedMediaFileMessage(const QString &filename, const QString &fileSuffix) {
+    QString folderName;
+    if (fileSuffix == "gif") {
+        folderName = "gifs";
+    } else if (fileSuffix == "mp4") {
+        folderName = "videos";
+    } else {
+        folderName = "images";
+    }
+
+    QString message = "File saved as " + filename + " in " + folderName + " folder";
+
+    if (fileSuffix == "png") {
+        message += " and pasta." + fileSuffix + " in Images folder";
+    }
+
+    return message;
 }

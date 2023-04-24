@@ -18,6 +18,14 @@ public:
 protected:
     void dragEnterEvent(QDragEnterEvent *event) override;
     void dropEvent(QDropEvent *event) override;
+private:
+    QString getTargetFolderPath(const QString &fileSuffix);
+    QString getImagesFolderPath();
+    void createFolderIfNotExists(const QString &folderPath);
+    void copyFileToPath(const QString &sourcePath, const QString &destinationPath);
+    //QString getSavedFileMessage(const QString &filename, const QString &fileSuffix);
+    bool isSupportedFileFormat(const QString &fileSuffix);
+    QString getSavedMediaFileMessage(const QString &filename, const QString &fileSuffix);
 };
 
 #endif // MEDIAROPAREA_H
