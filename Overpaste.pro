@@ -11,10 +11,14 @@ CONFIG += c++17
 
 SOURCES += \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    mediadroparea.cpp \
+    sidebar.cpp
 
 HEADERS += \
-    mainwindow.hh
+    mainwindow.hh \
+    mediadroparea.hh \
+    sidebar.hh
 
 FORMS += \
     mainwindow.ui

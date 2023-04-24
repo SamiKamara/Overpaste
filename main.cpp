@@ -17,48 +17,11 @@
 #include <QFile>
 #include <QtSvg/QSvgRenderer>
 #include <QPainter>
+#include <mediadroparea.hh>
 
 void setupTitleBar(QFrame *titleBar, QWidget *parent);
 QPushButton *createTitleBarButton(const QString &text, QWidget *parent);
 QFrame *createGripBar(QWidget *parent);
-
-class ImageDropArea : public QLabel {
-public:
-    ImageDropArea(QWidget *parent = nullptr) : QLabel(parent) {
-        setAcceptDrops(true);
-        setAlignment(Qt::AlignCenter);
-        setText("Drop .png file here, to save as pasta.png");
-        setFrameStyle(QFrame::Box | QFrame::Sunken);
-    }
-
-protected:
-    void dragEnterEvent(QDragEnterEvent *event) override {
-        if (event->mimeData()->hasUrls()) {
-            event->acceptProposedAction();
-        }
-    }
-
-    void dropEvent(QDropEvent *event) override {
-        const QMimeData *mimeData = event->mimeData();
-        if (mimeData->hasUrls()) {
-            QList<QUrl> urlList = mimeData->urls();
-            for (const QUrl &url : urlList) {
-                QFileInfo fileInfo(url.toLocalFile());
-                if (fileInfo.suffix().toLower() == "png") {
-                    QFile file(url.toLocalFile());
-                    QString buildPath = QApplication::applicationDirPath() + "/pasta.png";
-                    QFile oldFile(buildPath);
-                    if (oldFile.exists()) {
-                        oldFile.remove();
-                    }
-                    file.copy(buildPath);
-                    setText("File saved as pasta.png");
-                    break;
-                }
-            }
-        }
-    }
-};
 
 class CustomWindow : public QWidget {
 public:
