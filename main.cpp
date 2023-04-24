@@ -30,6 +30,7 @@ public:
     explicit CustomWindow(QWidget *parent = nullptr) : QWidget(parent) {
         setWindowFlags(Qt::FramelessWindowHint);
         setWindowTitle("Custom Title Bar");
+        setStyleSheet("background-color: #282c34;");
 
         QFrame *titleBar = new QFrame(this);
         setupTitleBar(titleBar, this);
@@ -61,13 +62,13 @@ public:
         // Create the image drop area
         MediaDropArea *dropArea = new MediaDropArea(contentWidget);
         contentLayout->addWidget(dropArea);
-
         splitter->addWidget(contentWidget);
 
         QVBoxLayout *mainLayout = new QVBoxLayout(this);
-        mainLayout->setContentsMargins(0, 0, 0, 0);
         mainLayout->addWidget(titleBar);
-        mainLayout->addWidget(splitter, 1);
+        mainLayout->addWidget(splitter);
+        mainLayout->setContentsMargins(0, 0, 0, 0);
+        contentLayout->setContentsMargins(0, 0, 0, 0);
 
         setFixedSize(800, 500);
     }
@@ -120,7 +121,7 @@ int main(int argc, char *argv[])
 
 void setupTitleBar(QFrame *titleBar, QWidget *parent) {
     titleBar->setFixedHeight(50);
-    titleBar->setStyleSheet("background-color: #21252b;");
+    titleBar->setStyleSheet("background-color: #21252b; border-bottom: 3px solid #2c313a;");
 
     QPushButton *closeButton = createTitleBarButton(":/icons/window-close.svg", parent);
     QObject::connect(closeButton, &QPushButton::clicked, parent, &QWidget::close);
@@ -139,15 +140,10 @@ void setupTitleBar(QFrame *titleBar, QWidget *parent) {
         }
     });
 
-
     QFrame *gripBar = createGripBar(parent);
 
     QHBoxLayout *titleLayout = new QHBoxLayout(titleBar);
     titleLayout->addWidget(gripBar, 1);
-
-    QSpacerItem* verticalSpacer = new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Minimum);
-    titleLayout->addItem(verticalSpacer);
-
     titleLayout->addWidget(minimizeButton, 0, Qt::AlignCenter);
     titleLayout->addWidget(restoreButton, 0, Qt::AlignRight);
     titleLayout->addWidget(closeButton, 0, Qt::AlignRight);
