@@ -16,7 +16,7 @@ public:
 
 private:
     QVBoxLayout *sidebarLayout;
-
+    QPushButton* createButton(const QString& text, const QIcon& icon, const QString& style);
 };
 
 #endif // SIDEBAR_HH
