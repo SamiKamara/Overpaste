@@ -5,5 +5,10 @@
         <file>icons/window-minimize.svg</file>
         <file>icons/window-restore.svg</file>
         <file>icons/images.svg</file>
+        <file>icons/gifs.svg</file>
+        <file>icons/texts.svg</file>
+        <file>icons/videos.svg</file>
+        <file>icons/all.svg</file>
+        <file>icons/menu.svg</file>
     </qresource>
 </RCC>
