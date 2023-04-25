@@ -14,7 +14,6 @@
 class MediaDropArea : public QLabel {
 public:
     MediaDropArea(QWidget *parent = nullptr);
-
 protected:
     void dragEnterEvent(QDragEnterEvent *event) override;
     void dropEvent(QDropEvent *event) override;
@@ -23,7 +22,6 @@ private:
     QString getImagesFolderPath();
     void createFolderIfNotExists(const QString &folderPath);
     void copyFileToPath(const QString &sourcePath, const QString &destinationPath);
-    //QString getSavedFileMessage(const QString &filename, const QString &fileSuffix);
     bool isSupportedFileFormat(const QString &fileSuffix);
     QString getSavedMediaFileMessage(const QString &filename, const QString &fileSuffix);
 };
