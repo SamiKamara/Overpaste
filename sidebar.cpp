@@ -26,15 +26,7 @@ Sidebar::Sidebar(QWidget *parent)
         "QPushButton:hover { background-color: #393d47; }";
 
     // Add buttons to the sidebar
-    QIcon menuIcon(":/icons/menu.svg");
-    QPixmap menuPixmap = menuIcon.pixmap(QSize(22, 22));
-    QPushButton *menuButton = new QPushButton(this);
-    menuButton->setIcon(QIcon(menuPixmap)); // Set the icon of the button
-    menuButton->setIconSize(menuPixmap.size()); // Set the size of the icon
-    menuButton->setText(" Toggle sidebar");
-    menuButton->setCursor(Qt::PointingHandCursor);
-    menuButton->setStyleSheet(buttonStyle);
-    sidebarContentLayout->addWidget(menuButton);
+    sidebarContentLayout->addWidget(createButton(" Toggle sidebar", QIcon(":/icons/menu.svg"), buttonStyle));
 
     // Add a label for the categories
     QLabel *filesLabel = new QLabel("Files", this);
@@ -42,15 +34,7 @@ Sidebar::Sidebar(QWidget *parent)
     sidebarContentLayout->addWidget(filesLabel);
 
     // Add buttons to the sidebar
-    QIcon allIcon(":/icons/all.svg");
-    QPixmap allPixmap = allIcon.pixmap(QSize(22, 22));
-    QPushButton *allButton = new QPushButton(this);
-    allButton->setIcon(QIcon(allPixmap)); // Set the icon of the button
-    allButton->setIconSize(allPixmap.size()); // Set the size of the icon
-    allButton->setText(" All files");
-    allButton->setCursor(Qt::PointingHandCursor);
-    allButton->setStyleSheet(buttonStyle);
-    sidebarContentLayout->addWidget(allButton);
+    sidebarContentLayout->addWidget(createButton(" All files", QIcon(":/icons/all.svg"), buttonStyle));
 
     // Add a label for the categories
     QLabel *categoriesLabel = new QLabel("Categories", this);
@@ -58,45 +42,10 @@ Sidebar::Sidebar(QWidget *parent)
     sidebarContentLayout->addWidget(categoriesLabel);
 
     // Add buttons to the sidebar
-    QIcon imagesIcon(":/icons/images.svg");
-    QPixmap imagesPixmap = imagesIcon.pixmap(QSize(22, 22));
-    QPushButton *imagesButton = new QPushButton(this);
-    imagesButton->setIcon(QIcon(imagesPixmap)); // Set the icon of the button
-    imagesButton->setIconSize(imagesPixmap.size()); // Set the size of the icon
-    imagesButton->setText(" Images");
-    imagesButton->setCursor(Qt::PointingHandCursor);
-    imagesButton->setStyleSheet(buttonStyle);
-    sidebarContentLayout->addWidget(imagesButton);
-
-    QIcon gifsIcon(":/icons/gifs.svg");
-    QPixmap gifsPixmap = gifsIcon.pixmap(QSize(22, 22));
-    QPushButton *gifsButton = new QPushButton(this);
-    gifsButton->setIcon(QIcon(gifsPixmap)); // Set the icon of the button
-    gifsButton->setIconSize(gifsPixmap.size()); // Set the size of the icon
-    gifsButton->setText(" GIFs");
-    gifsButton->setCursor(Qt::PointingHandCursor);
-    gifsButton->setStyleSheet(buttonStyle);
-    sidebarContentLayout->addWidget(gifsButton);
-
-    QIcon textsIcon(":/icons/texts.svg");
-    QPixmap textsPixmap = textsIcon.pixmap(QSize(22, 22));
-    QPushButton *textsButton = new QPushButton(this);
-    textsButton->setIcon(QIcon(textsPixmap)); // Set the icon of the button
-    textsButton->setIconSize(textsPixmap.size()); // Set the size of the icon
-    textsButton->setText(" Texts");
-    textsButton->setCursor(Qt::PointingHandCursor);
-    textsButton->setStyleSheet(buttonStyle);
-    sidebarContentLayout->addWidget(textsButton);
-
-    QIcon videosIcon(":/icons/videos.svg");
-    QPixmap videosPixmap = videosIcon.pixmap(QSize(22, 22));
-    QPushButton *videosButton = new QPushButton(this);
-    videosButton->setIcon(QIcon(videosPixmap)); // Set the icon of the button
-    videosButton->setIconSize(videosPixmap.size()); // Set the size of the icon
-    videosButton->setText(" Videos");
-    videosButton->setCursor(Qt::PointingHandCursor);
-    videosButton->setStyleSheet(buttonStyle);
-    sidebarContentLayout->addWidget(videosButton);
+    sidebarContentLayout->addWidget(createButton(" Images", QIcon(":/icons/images.svg"), buttonStyle));
+    sidebarContentLayout->addWidget(createButton(" GIFs", QIcon(":/icons/gifs.svg"), buttonStyle));
+    sidebarContentLayout->addWidget(createButton(" Texts", QIcon(":/icons/texts.svg"), buttonStyle));
+    sidebarContentLayout->addWidget(createButton(" Videos", QIcon(":/icons/videos.svg"), buttonStyle));
 
     // Add a spacer at the bottom of the button layout to push buttons to the top
     QSpacerItem *spacer = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
@@ -104,7 +53,16 @@ Sidebar::Sidebar(QWidget *parent)
 
     // Add the button layout to the sidebar frame
     sidebarLayout->addWidget(sidebarFrame);
+}
 
-    // Set the layout
-    setLayout(sidebarLayout);
+QPushButton* Sidebar::createButton(const QString& text, const QIcon& icon, const QString& style)
+{
+    QPushButton *button = new QPushButton(this);
+    button->setIcon(icon);
+    button->setIconSize(QSize(22, 22));
+    button->setText(text);
+    button->setStyleSheet(style);
+    button->setFixedSize(250, 40);
+    button->setCursor(Qt::PointingHandCursor);
+    return button;
 }
