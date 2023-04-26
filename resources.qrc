@@ -10,5 +10,6 @@
         <file>icons/videos.svg</file>
         <file>icons/all.svg</file>
         <file>icons/menu.svg</file>
+        <file>icons/logo.svg</file>
     </qresource>
 </RCC>

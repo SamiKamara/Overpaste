@@ -124,6 +124,10 @@ void setupTitleBar(QFrame *titleBar, QWidget *parent) {
     titleBar->setFixedHeight(50);
     titleBar->setStyleSheet("background-color: #21252b; border-bottom: 3px solid #2c313a;");
 
+    QLabel *logoLabel = new QLabel(titleBar);
+    logoLabel->setPixmap(QPixmap(":/icons/logo.svg").scaled(150, 250, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    logoLabel->setStyleSheet("border: none;");
+
     QPushButton *closeButton = createTitleBarButton(":/icons/window-close.svg", parent);
     QObject::connect(closeButton, &QPushButton::clicked, parent, &QWidget::close);
 
@@ -144,11 +148,12 @@ void setupTitleBar(QFrame *titleBar, QWidget *parent) {
     QFrame *gripBar = createGripBar(parent);
 
     QHBoxLayout *titleLayout = new QHBoxLayout(titleBar);
+    titleLayout->addWidget(logoLabel, 0, Qt::AlignLeft | Qt::AlignVCenter);
     titleLayout->addWidget(gripBar, 1);
     titleLayout->addWidget(minimizeButton, 0, Qt::AlignCenter);
     titleLayout->addWidget(restoreButton, 0, Qt::AlignRight);
     titleLayout->addWidget(closeButton, 0, Qt::AlignRight);
-    titleLayout->setContentsMargins(0, 0, 10, 0);
+    titleLayout->setContentsMargins(10, 0, 10, 0);
 }
 
 // Function to create title bar button with SVG icon
