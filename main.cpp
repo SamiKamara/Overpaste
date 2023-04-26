@@ -20,6 +20,7 @@
 #include <sidebar.hh>
 #include <QSplitter>
 #include <mediadroparea.hh>
+#include <borderwidget.hh>
 
 void setupTitleBar(QFrame *titleBar, QWidget *parent);
 QPushButton *createTitleBarButton(const QString &text, QWidget *parent);
@@ -71,6 +72,9 @@ public:
         mainLayout->setContentsMargins(0, 0, 0, 0);
         contentLayout->setContentsMargins(0, 0, 0, 0);
 
+        m_borderWidget = new BorderWidget(this);
+        m_borderWidget->setGeometry(0, 0, width(), height());
+
         setFixedSize(800, 500);
     }
 
@@ -87,6 +91,11 @@ protected:
             move(event->globalPosition().toPoint() - m_dragPosition);
             event->accept();
         }
+    }
+
+    void resizeEvent(QResizeEvent *event) override {
+        m_borderWidget->setGeometry(0, 0, width(), height());
+        QWidget::resizeEvent(event);
     }
 
 private slots:
@@ -108,6 +117,7 @@ private slots:
 
 private:
     QPoint m_dragPosition;
+    BorderWidget *m_borderWidget;
 };
 
 int main(int argc, char *argv[])
