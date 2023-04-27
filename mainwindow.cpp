@@ -21,6 +21,7 @@
 #include <sidebar.hh>
 #include <QSplitter>
 #include <mediadroparea.hh>
+#include <borderwidget.hh>
 
 void setupTitleBar(QFrame *titleBar, QWidget *parent);
 QPushButton *createTitleBarButton(const QString &text, QWidget *parent);
@@ -71,6 +72,9 @@ MainWindow::MainWindow(QWidget *parent)
     mainLayout->setContentsMargins(0, 0, 0, 0);
     contentLayout->setContentsMargins(0, 0, 0, 0);
 
+    m_borderWidget = new BorderWidget(this);
+    m_borderWidget->setGeometry(0, 0, width(), height());
+
     setFixedSize(800, 500);
 }
 
@@ -89,6 +93,11 @@ void MainWindow::mouseMoveEvent(QMouseEvent *event) {
         move(event->globalPosition().toPoint() - m_dragPosition);
         event->accept();
     }
+}
+
+void MainWindow::resizeEvent(QResizeEvent* event) {
+    m_borderWidget->setGeometry(0, 0, width(), height());
+    QWidget::resizeEvent(event);
 }
 
 void MainWindow::copyTextToClipboard(const QString &text) {

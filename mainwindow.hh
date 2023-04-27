@@ -22,6 +22,7 @@
 #include <sidebar.hh>
 #include <QSplitter>
 #include <mediadroparea.hh>
+#include <borderwidget.hh>
 
 class MainWindow : public QWidget
 {
@@ -34,6 +35,7 @@ public:
 protected:
     void mousePressEvent(QMouseEvent *event) override;
     void mouseMoveEvent(QMouseEvent *event) override;
+    void resizeEvent(QResizeEvent *event) override;
 
 private slots:
     void copyTextToClipboard(const QString &text);
@@ -41,6 +43,7 @@ private slots:
 
 private:
     QPoint m_dragPosition;
+    BorderWidget* m_borderWidget;
 };
 
 #endif // MAINWINDOW_HH
