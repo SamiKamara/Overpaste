@@ -24,6 +24,7 @@ private:
     void copyFileToPath(const QString &sourcePath, const QString &destinationPath);
     bool isSupportedFileFormat(const QString &fileSuffix);
     QString getSavedMediaFileMessage(const QString &filename, const QString &fileSuffix);
+    void createShortcut(const QString &sourcePath, const QString &shortcutPath);
 };
 
 #endif // MEDIAROPAREA_H
