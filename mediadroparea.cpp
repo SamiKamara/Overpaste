@@ -1,5 +1,9 @@
 #include "MediaDropArea.hh"
 
+void MediaDropArea::createShortcut(const QString &sourcePath, const QString &shortcutPath) {
+    QFile::link(sourcePath, shortcutPath);
+}
+
 MediaDropArea::MediaDropArea(QWidget *parent) : QLabel(parent) {
     setAcceptDrops(true);
     setAlignment(Qt::AlignCenter);
@@ -79,7 +83,13 @@ void MediaDropArea::copyFileToPath(const QString &sourcePath, const QString &des
 
     QFile file(sourcePath);
     file.copy(destinationPath);
+
+    QFileInfo fileInfo(destinationPath);
+    QDir parentFolder = fileInfo.dir().absolutePath() + "/..";
+    QString shortcutPath = parentFolder.absolutePath() + "/" + fileInfo.fileName() + ".lnk";
+    createShortcut(destinationPath, shortcutPath);
 }
+
 
 QString MediaDropArea::getSavedMediaFileMessage(const QString &filename, const QString &fileSuffix) {
     QString folderName;

@@ -34,3 +34,6 @@ RESOURCES += \
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+# Linking required libraries for Windows
+win32: LIBS += -lole32 -luuid -lshell32
