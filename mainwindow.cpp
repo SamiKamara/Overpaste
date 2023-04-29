@@ -75,6 +75,8 @@ MainWindow::MainWindow(QWidget *parent)
     m_borderWidget = new BorderWidget(this);
     m_borderWidget->setGeometry(0, 0, width(), height());
 
+    m_isDragging = false;
+
     setFixedSize(800, 500);
 }
 
@@ -82,17 +84,34 @@ MainWindow::~MainWindow() {
 }
 
 void MainWindow::mousePressEvent(QMouseEvent *event) {
-    if (event->button() == Qt::LeftButton && event->pos().y() < 50) {
+
+    m_isDragging = false;
+    int right_side_limit = width() - 100;
+
+    if (event->button() == Qt::LeftButton && event->pos().y() < 50 && event->pos().x() < right_side_limit) {
         m_dragPosition = event->globalPosition().toPoint() - frameGeometry().topLeft();
         event->accept();
+        m_isDragging = true;
     }
 }
 
 void MainWindow::mouseMoveEvent(QMouseEvent *event) {
-    if (event->buttons() & Qt::MouseButton::LeftButton && event->pos().y() < 50) {
+    if (m_isDragging && event->buttons() & Qt::MouseButton::LeftButton) {
         move(event->globalPosition().toPoint() - m_dragPosition);
         event->accept();
     }
+}
+
+void MainWindow::mouseReleaseEvent(QMouseEvent *event) {
+    if (m_isDragging && event->button() == Qt::LeftButton) {
+        m_isDragging = false;
+        onDragFinished();
+        event->accept();
+    }
+}
+
+void MainWindow::onDragFinished() {
+    m_isDragging = false;
 }
 
 void MainWindow::resizeEvent(QResizeEvent* event) {
@@ -179,5 +198,4 @@ QFrame *createGripBar(QWidget *parent) {
     gripBar->setStyleSheet("background-color: #21252b;");
     return gripBar;
 }
-
 

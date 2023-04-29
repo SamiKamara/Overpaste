@@ -35,6 +35,7 @@ public:
 protected:
     void mousePressEvent(QMouseEvent *event) override;
     void mouseMoveEvent(QMouseEvent *event) override;
+    void mouseReleaseEvent(QMouseEvent *event) override;
     void resizeEvent(QResizeEvent *event) override;
 
 private slots:
@@ -44,6 +45,8 @@ private slots:
 private:
     QPoint m_dragPosition;
     BorderWidget* m_borderWidget;
+    bool m_isDragging;
+    void onDragFinished();
 };
 
 #endif // MAINWINDOW_HH
