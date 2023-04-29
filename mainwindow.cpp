@@ -22,6 +22,7 @@
 #include <QSplitter>
 #include <mediadroparea.hh>
 #include <borderwidget.hh>
+#include "explorer.hh"
 
 void setupTitleBar(QFrame *titleBar, QWidget *parent);
 QPushButton *createTitleBarButton(const QString &text, QWidget *parent);
@@ -44,7 +45,9 @@ MainWindow::MainWindow(QWidget *parent)
 
     QWidget *contentWidget = new QWidget(splitter);
     QVBoxLayout *contentLayout = new QVBoxLayout(contentWidget);
-    contentLayout->addWidget(new QLabel("This is content", contentWidget));
+
+    Explorer *explorer = new Explorer(contentWidget);
+    contentLayout->addWidget(explorer);
 
     // Create the first button
     QPushButton *copyButton1 = new QPushButton("Copy 'hello pasta'", contentWidget);
@@ -63,6 +66,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     // Create the image drop area
     MediaDropArea *dropArea = new MediaDropArea(contentWidget);
+    dropArea->setMinimumHeight(100);
     contentLayout->addWidget(dropArea);
     splitter->addWidget(contentWidget);
     QVBoxLayout *mainLayout = new QVBoxLayout(this);

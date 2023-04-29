@@ -11,6 +11,7 @@ CONFIG += c++17
 
 SOURCES += \
     borderwidget.cpp \
+    explorer.cpp \
     main.cpp \
     mainwindow.cpp \
     mediadroparea.cpp \
@@ -18,6 +19,7 @@ SOURCES += \
 
 HEADERS += \
     borderwidget.hh \
+    explorer.hh \
     mainwindow.hh \
     mediadroparea.hh \
     sidebar.hh
