@@ -3,10 +3,12 @@
 #include <QVBoxLayout>
 #include <QClipboard>
 #include <QGuiApplication>
+#include <QDir>
 
 Explorer::Explorer(QWidget *parent)
     : QWidget(parent)
 {
+    targetFolderId = 0;
     QVBoxLayout *layout = new QVBoxLayout(this);
 
     m_listView = new QListView(this);
@@ -14,12 +16,10 @@ Explorer::Explorer(QWidget *parent)
     layout->setContentsMargins(0, 0, 0, 0);
 
     m_model = new QFileSystemModel(this);
-    m_model->setRootPath(QCoreApplication::applicationDirPath() + "/files");
     m_model->setFilter(QDir::Files);
     m_model->setHeaderData(0, Qt::Horizontal, "File Explorer");
 
     m_listView->setModel(m_model);
-    m_listView->setRootIndex(m_model->index(QCoreApplication::applicationDirPath() + "/files"));
     m_listView->setViewMode(QListView::IconMode);
     m_listView->setGridSize(QSize(100, 100));
     m_listView->setSpacing(10);
@@ -29,6 +29,43 @@ Explorer::Explorer(QWidget *parent)
 
     this->setLayout(layout);
     connect(m_listView, &QListView::clicked, this, &Explorer::onFileClicked);
+
+    updateModelRootPath();
+}
+
+void Explorer::updateModelRootPath()
+{
+    QString rootPath;
+
+    if (targetFolderId == 0)
+    {
+        rootPath = QCoreApplication::applicationDirPath() + "/files";
+    }
+    else if (targetFolderId == 1)
+    {
+        rootPath = QCoreApplication::applicationDirPath() + "/files/images";
+    }
+    else if (targetFolderId == 2)
+    {
+        rootPath = QCoreApplication::applicationDirPath() + "/files/gifs";
+    }
+    else if (targetFolderId == 3)
+    {
+        rootPath = QCoreApplication::applicationDirPath() + "/files/texts";
+    }
+    else if (targetFolderId == 4)
+    {
+        rootPath = QCoreApplication::applicationDirPath() + "/files/videos";
+    }
+
+    QDir dir;
+    if (!dir.exists(rootPath))
+    {
+        dir.mkpath(rootPath);
+    }
+
+    m_model->setRootPath(rootPath);
+    m_listView->setRootIndex(m_model->index(rootPath));
 }
 
 void Explorer::onFileClicked(const QModelIndex &index)
@@ -96,3 +133,32 @@ QString Explorer::resolveShortcut(const QString &filePath)
     return filePath;
 }
 
+void Explorer::onAllFilesButtonClicked()
+{
+    targetFolderId = 0;
+    updateModelRootPath();
+}
+
+void Explorer::onImagesButtonClicked()
+{
+    targetFolderId = 1;
+    updateModelRootPath();
+}
+
+void Explorer::onGifsButtonClicked()
+{
+    targetFolderId = 2;
+    updateModelRootPath();
+}
+
+void Explorer::onTextsButtonClicked()
+{
+    targetFolderId = 3;
+    updateModelRootPath();
+}
+
+void Explorer::onVideosButtonClicked()
+{
+    targetFolderId = 4;
+    updateModelRootPath();
+}

@@ -25,14 +25,23 @@ class Explorer : public QWidget
 
 public:
     explicit Explorer(QWidget *parent = nullptr);
+    int targetFolderId;
 
 private:
     QFileSystemModel *m_model;
     QListView *m_listView;
 
     QString resolveShortcut(const QString &filePath);
+    void updateModelRootPath();
 private slots:
     void onFileClicked(const QModelIndex &index);
+
+public slots:
+    void onImagesButtonClicked();
+    void onAllFilesButtonClicked();
+    void onGifsButtonClicked();
+    void onTextsButtonClicked();
+    void onVideosButtonClicked();
 };
 
 #endif // EXPLORER_HH
