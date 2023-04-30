@@ -7,7 +7,6 @@ Sidebar::Sidebar(QWidget *parent)
 {
     sidebarLayout = new QVBoxLayout(this);
 
-    // Set margin to 0
     sidebarLayout->setContentsMargins(0, 0, 0, 0);
 
     // Width of the sidebar
@@ -33,8 +32,9 @@ Sidebar::Sidebar(QWidget *parent)
     filesLabel->setStyleSheet("color: #9aa0a6; font-size: 10px; font-weight: 700; padding: 10px; text-transform: uppercase; font-weight: 700; margin-bottom: -5px; ");
     sidebarContentLayout->addWidget(filesLabel);
 
-    // Add buttons to the sidebar
-    sidebarContentLayout->addWidget(createButton(" All files", QIcon(":/icons/all.svg"), buttonStyle));
+    QPushButton *allFilesButton = createButton(" All files", QIcon(":/icons/all.svg"), buttonStyle);
+    connect(allFilesButton, &QPushButton::clicked, this, &Sidebar::allFilesButtonClicked);
+    sidebarContentLayout->addWidget(allFilesButton);
 
     // Add a label for the categories
     QLabel *categoriesLabel = new QLabel("Categories", this);
@@ -42,10 +42,21 @@ Sidebar::Sidebar(QWidget *parent)
     sidebarContentLayout->addWidget(categoriesLabel);
 
     // Add buttons to the sidebar
-    sidebarContentLayout->addWidget(createButton(" Images", QIcon(":/icons/images.svg"), buttonStyle));
-    sidebarContentLayout->addWidget(createButton(" GIFs", QIcon(":/icons/gifs.svg"), buttonStyle));
-    sidebarContentLayout->addWidget(createButton(" Texts", QIcon(":/icons/texts.svg"), buttonStyle));
-    sidebarContentLayout->addWidget(createButton(" Videos", QIcon(":/icons/videos.svg"), buttonStyle));
+    QPushButton *imagesButton = createButton(" Images", QIcon(":/icons/images.svg"), buttonStyle);
+    connect(imagesButton, &QPushButton::clicked, this, &Sidebar::imagesButtonClicked);
+    sidebarContentLayout->addWidget(imagesButton);
+
+    QPushButton *gifsButton = createButton(" GIFs", QIcon(":/icons/gifs.svg"), buttonStyle);
+    connect(gifsButton, &QPushButton::clicked, this, &Sidebar::gifsButtonClicked);
+    sidebarContentLayout->addWidget(gifsButton);
+
+    QPushButton *textsButton = createButton(" Texts", QIcon(":/icons/texts.svg"), buttonStyle);
+    connect(textsButton, &QPushButton::clicked, this, &Sidebar::textsButtonClicked);
+    sidebarContentLayout->addWidget(textsButton);
+
+    QPushButton *videosButton = createButton(" Videos", QIcon(":/icons/videos.svg"), buttonStyle);
+    connect(videosButton, &QPushButton::clicked, this, &Sidebar::videosButtonClicked);
+    sidebarContentLayout->addWidget(videosButton);
 
     // Add a spacer at the bottom of the button layout to push buttons to the top
     QSpacerItem *spacer = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);

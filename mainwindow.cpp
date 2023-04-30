@@ -38,7 +38,7 @@ MainWindow::MainWindow(QWidget *parent)
     QFrame *titleBar = new QFrame(this);
     setupTitleBar(titleBar, this);
 
-    QWidget *sidebar = new Sidebar(this);
+    Sidebar *sidebar = new Sidebar(this);
 
     QSplitter *splitter = new QSplitter(Qt::Horizontal, this);
     splitter->addWidget(sidebar);
@@ -49,17 +49,20 @@ MainWindow::MainWindow(QWidget *parent)
     Explorer *explorer = new Explorer(contentWidget);
     contentLayout->addWidget(explorer);
 
-    // Create the first button
+    connect(sidebar, &Sidebar::imagesButtonClicked, explorer, &Explorer::onImagesButtonClicked);
+    connect(sidebar, &Sidebar::allFilesButtonClicked, explorer, &Explorer::onAllFilesButtonClicked);
+    connect(sidebar, &Sidebar::gifsButtonClicked, explorer, &Explorer::onGifsButtonClicked);
+    connect(sidebar, &Sidebar::textsButtonClicked, explorer, &Explorer::onTextsButtonClicked);
+    connect(sidebar, &Sidebar::videosButtonClicked, explorer, &Explorer::onVideosButtonClicked);
+
     QPushButton *copyButton1 = new QPushButton("Copy 'hello pasta'", contentWidget);
     contentLayout->addWidget(copyButton1);
     connect(copyButton1, &QPushButton::clicked, this, [=]() { copyTextToClipboard("hello pasta"); });
 
-    // Create the second button
     QPushButton *copyButton2 = new QPushButton("Copy 'hello over'", contentWidget);
     contentLayout->addWidget(copyButton2);
     connect(copyButton2, &QPushButton::clicked, this, [=]() { copyTextToClipboard("hello over"); });
 
-    // Create the image copy button
     QPushButton *copyImageButton = new QPushButton("Copy 'pasta.png' image", contentWidget);
     contentLayout->addWidget(copyImageButton);
     connect(copyImageButton, &QPushButton::clicked, this, &MainWindow::copyImageToClipboard);
