@@ -15,16 +15,16 @@ Explorer::Explorer(QWidget *parent)
     layout->addWidget(m_listView);
     layout->setContentsMargins(0, 0, 0, 0);
 
-    m_model = new QFileSystemModel(this);
+    m_model = new CustomIconFileSystemModel(this);
     m_model->setFilter(QDir::Files);
     m_model->setHeaderData(0, Qt::Horizontal, "File Explorer");
 
     m_listView->setModel(m_model);
     m_listView->setViewMode(QListView::IconMode);
     m_listView->setGridSize(QSize(100, 100));
-    m_listView->setSpacing(10);
+    m_listView->setSpacing(2);
     m_listView->setResizeMode(QListView::Adjust);
-    m_listView->setUniformItemSizes(true);
+    m_listView->setUniformItemSizes(false);
     m_listView->setMovement(QListView::Static);
 
     this->setLayout(layout);
@@ -39,7 +39,7 @@ void Explorer::updateModelRootPath()
 
     if (targetFolderId == 0)
     {
-        rootPath = QCoreApplication::applicationDirPath() + "/files";
+        rootPath = QCoreApplication::applicationDirPath() + "/files/library";
     }
     else if (targetFolderId == 1)
     {

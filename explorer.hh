@@ -12,6 +12,8 @@
 #include <QFileInfo>
 #include <QDir>
 
+#include "customiconfilesystemmodel.hh"
+
 #ifdef Q_OS_WIN
     #include <windows.h>
     #include <shlobj.h>
@@ -26,12 +28,12 @@ class Explorer : public QWidget
 public:
     explicit Explorer(QWidget *parent = nullptr);
     int targetFolderId;
+    static QString resolveShortcut(const QString &filePath);
 
 private:
     QFileSystemModel *m_model;
     QListView *m_listView;
 
-    QString resolveShortcut(const QString &filePath);
     void updateModelRootPath();
 private slots:
     void onFileClicked(const QModelIndex &index);

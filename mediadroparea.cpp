@@ -86,10 +86,14 @@ void MediaDropArea::copyFileToPath(const QString &sourcePath, const QString &des
 
     QFileInfo fileInfo(destinationPath);
     QDir parentFolder = fileInfo.dir().absolutePath() + "/..";
-    QString shortcutPath = parentFolder.absolutePath() + "/" + fileInfo.fileName() + ".lnk";
+
+    QString libraryFolderPath = parentFolder.absolutePath() + "/library";
+    createFolderIfNotExists(libraryFolderPath);
+
+    QString shortcutPath = libraryFolderPath + "/" + fileInfo.fileName() + ".lnk";
+
     createShortcut(destinationPath, shortcutPath);
 }
-
 
 QString MediaDropArea::getSavedMediaFileMessage(const QString &filename, const QString &fileSuffix) {
     QString folderName;
