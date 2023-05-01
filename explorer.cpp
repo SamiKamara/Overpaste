@@ -21,11 +21,13 @@ Explorer::Explorer(QWidget *parent)
 
     m_listView->setModel(m_model);
     m_listView->setViewMode(QListView::IconMode);
-    m_listView->setGridSize(QSize(100, 100));
-    m_listView->setSpacing(2);
+    m_listView->setGridSize(QSize(87, 87));
+    m_listView->setIconSize(QSize(66, 74));
+    m_listView->setSpacing(1);
     m_listView->setResizeMode(QListView::Adjust);
     m_listView->setUniformItemSizes(false);
     m_listView->setMovement(QListView::Static);
+    m_listView->setStyleSheet("border: 1px solid transparent;");
 
     this->setLayout(layout);
     connect(m_listView, &QListView::clicked, this, &Explorer::onFileClicked);
