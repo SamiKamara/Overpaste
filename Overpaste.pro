@@ -1,4 +1,4 @@
-QT       += core gui
+QT += core gui
 QT += svg
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
@@ -11,6 +11,7 @@ CONFIG += c++17
 
 SOURCES += \
     borderwidget.cpp \
+    customiconfilesystemmodel.cpp \
     explorer.cpp \
     main.cpp \
     mainwindow.cpp \
@@ -19,6 +20,7 @@ SOURCES += \
 
 HEADERS += \
     borderwidget.hh \
+    customiconfilesystemmodel.hh \
     explorer.hh \
     mainwindow.hh \
     mediadroparea.hh \
