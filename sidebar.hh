@@ -6,6 +6,7 @@
 #include <QHBoxLayout>
 #include <QPushButton>
 #include <QSpacerItem>
+#include <QStyle>
 
 class Sidebar : public QWidget
 {
@@ -17,6 +18,11 @@ public:
 private:
     QVBoxLayout *sidebarLayout;
     QPushButton* createButton(const QString& text, const QIcon& icon, const QString& style);
+    QPushButton *allFilesButton;
+    QPushButton *imagesButton;
+    QPushButton *gifsButton;
+    QPushButton *textsButton;
+    QPushButton *videosButton;
 
 signals:
     void imagesButtonClicked();
@@ -24,6 +30,8 @@ signals:
     void gifsButtonClicked();
     void textsButtonClicked();
     void videosButtonClicked();
+public slots:
+    void updateButtonStyles(int targetFolderId);
 };
 
 #endif // SIDEBAR_HH

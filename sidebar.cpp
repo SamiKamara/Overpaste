@@ -22,7 +22,7 @@ Sidebar::Sidebar(QWidget *parent)
     sidebarContentLayout->setSpacing(0);
 
     const QString buttonStyle = "QPushButton { text-align: left; color: #9aa0a6; background-color: #21252b; border: none; padding: 10px; font-size: 14px; font-weight: 700; }" \
-        "QPushButton:hover { background-color: #393d47; }";
+        "QPushButton:hover { background-color: #393d47 !important; }";
 
     // Add buttons to the sidebar
     sidebarContentLayout->addWidget(createButton(" Toggle sidebar", QIcon(":/icons/menu.svg"), buttonStyle));
@@ -32,7 +32,7 @@ Sidebar::Sidebar(QWidget *parent)
     filesLabel->setStyleSheet("color: #9aa0a6; font-size: 10px; font-weight: 700; padding: 10px; text-transform: uppercase; font-weight: 700; margin-bottom: -5px; ");
     sidebarContentLayout->addWidget(filesLabel);
 
-    QPushButton *allFilesButton = createButton(" All files", QIcon(":/icons/all.svg"), buttonStyle);
+    allFilesButton = createButton(" All files", QIcon(":/icons/all.svg"), buttonStyle);
     connect(allFilesButton, &QPushButton::clicked, this, &Sidebar::allFilesButtonClicked);
     sidebarContentLayout->addWidget(allFilesButton);
 
@@ -41,20 +41,19 @@ Sidebar::Sidebar(QWidget *parent)
     categoriesLabel->setStyleSheet("color: #9aa0a6; font-size: 10px; font-weight: 700; padding: 10px; text-transform: uppercase; font-weight: 700; margin-bottom: -5px; ");
     sidebarContentLayout->addWidget(categoriesLabel);
 
-    // Add buttons to the sidebar
-    QPushButton *imagesButton = createButton(" Images", QIcon(":/icons/images.svg"), buttonStyle);
+    imagesButton = createButton(" Images", QIcon(":/icons/images.svg"), buttonStyle);
     connect(imagesButton, &QPushButton::clicked, this, &Sidebar::imagesButtonClicked);
     sidebarContentLayout->addWidget(imagesButton);
 
-    QPushButton *gifsButton = createButton(" GIFs", QIcon(":/icons/gifs.svg"), buttonStyle);
+    gifsButton = createButton(" GIFs", QIcon(":/icons/gifs.svg"), buttonStyle);
     connect(gifsButton, &QPushButton::clicked, this, &Sidebar::gifsButtonClicked);
     sidebarContentLayout->addWidget(gifsButton);
 
-    QPushButton *textsButton = createButton(" Texts", QIcon(":/icons/texts.svg"), buttonStyle);
+    textsButton = createButton(" Texts", QIcon(":/icons/texts.svg"), buttonStyle);
     connect(textsButton, &QPushButton::clicked, this, &Sidebar::textsButtonClicked);
     sidebarContentLayout->addWidget(textsButton);
 
-    QPushButton *videosButton = createButton(" Videos", QIcon(":/icons/videos.svg"), buttonStyle);
+    videosButton = createButton(" Videos", QIcon(":/icons/videos.svg"), buttonStyle);
     connect(videosButton, &QPushButton::clicked, this, &Sidebar::videosButtonClicked);
     sidebarContentLayout->addWidget(videosButton);
 
@@ -76,4 +75,33 @@ QPushButton* Sidebar::createButton(const QString& text, const QIcon& icon, const
     button->setFixedSize(250, 40);
     button->setCursor(Qt::PointingHandCursor);
     return button;
+}
+
+void Sidebar::updateButtonStyles(int targetFolderId) {
+    const QString normalStyle = "text-align: left; color: #9aa0a6; background-color: #21252b; border: none; padding: 10px; font-size: 14px; font-weight: 700;";
+    const QString hoverStyle = "text-align: left; color: #9aa0a6; background-color: #393d47; border: none; padding: 10px; font-size: 14px; font-weight: 700;";
+
+    allFilesButton->setStyleSheet(normalStyle);
+    imagesButton->setStyleSheet(normalStyle);
+    gifsButton->setStyleSheet(normalStyle);
+    textsButton->setStyleSheet(normalStyle);
+    videosButton->setStyleSheet(normalStyle);
+
+    switch (targetFolderId) {
+    case 0:
+        allFilesButton->setStyleSheet(hoverStyle);
+        break;
+    case 1:
+        imagesButton->setStyleSheet(hoverStyle);
+        break;
+    case 2:
+        gifsButton->setStyleSheet(hoverStyle);
+        break;
+    case 3:
+        textsButton->setStyleSheet(hoverStyle);
+        break;
+    case 4:
+        videosButton->setStyleSheet(hoverStyle);
+        break;
+    }
 }

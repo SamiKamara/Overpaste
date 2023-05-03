@@ -84,6 +84,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     m_isDragging = false;
 
+    connect(explorer, &Explorer::targetFolderChanged, sidebar, &Sidebar::updateButtonStyles);
+
     setFixedSize(800, 500);
 }
 
