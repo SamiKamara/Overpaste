@@ -44,6 +44,9 @@ public slots:
     void onGifsButtonClicked();
     void onTextsButtonClicked();
     void onVideosButtonClicked();
+
+signals:
+    void targetFolderChanged(int targetFolderId);
 };
 
 #endif // EXPLORER_HH

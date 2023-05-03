@@ -68,6 +68,8 @@ void Explorer::updateModelRootPath()
 
     m_model->setRootPath(rootPath);
     m_listView->setRootIndex(m_model->index(rootPath));
+
+    emit targetFolderChanged(targetFolderId);
 }
 
 void Explorer::onFileClicked(const QModelIndex &index)
