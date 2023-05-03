@@ -4,6 +4,7 @@
 #include <QFileSystemModel>
 #include <QCoreApplication>
 #include <QIcon>
+#include <QPainter>
 
 #include "explorer.hh"
 
