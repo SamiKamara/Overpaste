@@ -105,7 +105,7 @@ void Sidebar::updateButtonStyles(int targetFolderId) {
         "font-weight: 700;}"
         "QPushButton:hover {"
         "background-color: #393d47 !important;}"
-        ;
+    ;
 
     const QString hoverStyle =
         "QPushButton {"
@@ -118,7 +118,7 @@ void Sidebar::updateButtonStyles(int targetFolderId) {
         "font-weight: 700;}"
         "QPushButton:hover {"
         "background-color: #5a5e6a !important;}"
-        ;
+    ;
 
     allFilesButton->setStyleSheet(targetFolderId == 0 ? hoverStyle : normalStyle);
     imagesButton->setStyleSheet(targetFolderId == 1 ? hoverStyle : normalStyle);

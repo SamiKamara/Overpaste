@@ -55,21 +55,9 @@ MainWindow::MainWindow(QWidget *parent)
     connect(sidebar, &Sidebar::textsButtonClicked, explorer, &Explorer::onTextsButtonClicked);
     connect(sidebar, &Sidebar::videosButtonClicked, explorer, &Explorer::onVideosButtonClicked);
 
-    QPushButton *copyButton1 = new QPushButton("Copy 'hello pasta'", contentWidget);
-    contentLayout->addWidget(copyButton1);
-    connect(copyButton1, &QPushButton::clicked, this, [=]() { copyTextToClipboard("hello pasta"); });
-
-    QPushButton *copyButton2 = new QPushButton("Copy 'hello over'", contentWidget);
-    contentLayout->addWidget(copyButton2);
-    connect(copyButton2, &QPushButton::clicked, this, [=]() { copyTextToClipboard("hello over"); });
-
-    QPushButton *copyImageButton = new QPushButton("Copy 'pasta.png' image", contentWidget);
-    contentLayout->addWidget(copyImageButton);
-    connect(copyImageButton, &QPushButton::clicked, this, &MainWindow::copyImageToClipboard);
-
     // Create the image drop area
     MediaDropArea *dropArea = new MediaDropArea(contentWidget);
-    dropArea->setMinimumHeight(100);
+    dropArea->setMinimumHeight(150);
     contentLayout->addWidget(dropArea);
     splitter->addWidget(contentWidget);
     QVBoxLayout *mainLayout = new QVBoxLayout(this);
@@ -126,22 +114,6 @@ void MainWindow::onDragFinished() {
 void MainWindow::resizeEvent(QResizeEvent* event) {
     m_borderWidget->setGeometry(0, 0, width(), height());
     QWidget::resizeEvent(event);
-}
-
-void MainWindow::copyTextToClipboard(const QString &text) {
-    QClipboard *clipboard = QApplication::clipboard();
-    clipboard->setText(text);
-}
-
-void MainWindow::copyImageToClipboard() {
-    QString imagePath = QApplication::applicationDirPath() + "/pasta.png";
-    QImage image(imagePath);
-    if (!image.isNull()) {
-        QClipboard *clipboard = QApplication::clipboard();
-        clipboard->setImage(image);
-    } else {
-        qDebug("Failed to load image.");
-    }
 }
 
 void setupTitleBar(QFrame *titleBar, QWidget *parent) {

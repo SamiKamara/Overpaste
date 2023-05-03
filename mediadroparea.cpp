@@ -7,8 +7,9 @@ void MediaDropArea::createShortcut(const QString &sourcePath, const QString &sho
 MediaDropArea::MediaDropArea(QWidget *parent) : QLabel(parent) {
     setAcceptDrops(true);
     setAlignment(Qt::AlignCenter);
-    setText("Drop .png file here, to save as pasta.png");
+    setText("Drop file here, to save as pasta");
     setFrameStyle(QFrame::Box | QFrame::Sunken);
+    setStyleSheet("color: rgb(154, 160, 166);");
 }
 
 void MediaDropArea::dragEnterEvent(QDragEnterEvent *event) {
@@ -32,11 +33,6 @@ void MediaDropArea::dropEvent(QDropEvent *event) {
 
                 createFolderIfNotExists(targetFolderPath);
                 copyFileToPath(url.toLocalFile(), buildPath);
-
-                if (fileSuffix == "png") {
-                    QString pastaPath = targetFolderPath + "/pasta." + fileSuffix;
-                    copyFileToPath(url.toLocalFile(), pastaPath);
-                }
 
                 setText(getSavedMediaFileMessage(originalFilename, fileSuffix));
                 break;
@@ -106,10 +102,5 @@ QString MediaDropArea::getSavedMediaFileMessage(const QString &filename, const Q
     }
 
     QString message = "File saved as " + filename + " in " + folderName + " folder";
-
-    if (fileSuffix == "png") {
-        message += " and pasta." + fileSuffix + " in Images folder";
-    }
-
     return message;
 }
