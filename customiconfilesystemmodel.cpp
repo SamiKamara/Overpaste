@@ -17,8 +17,13 @@ QVariant CustomIconFileSystemModel::data(const QModelIndex &index, int role) con
         return thumbnailIcon;
     }
 
+    if (role == Qt::ForegroundRole) {
+        return QColor(154, 160, 166);
+    }
+
     return QFileSystemModel::data(index, role);
 }
+
 
 QIcon CustomIconFileSystemModel::generateThumbnail(const QString &filePath) const {
     static const int thumbnailSize = 200;
@@ -26,9 +31,23 @@ QIcon CustomIconFileSystemModel::generateThumbnail(const QString &filePath) cons
     QPixmap whitePixmap(thumbnailSize, thumbnailSize);
     whitePixmap.fill(Qt::white);
 
-    //Here as a placeholder, until a way to generate thumbs for videos is added
     QFileInfo fileInfo(filePath);
+    QString fileName = fileInfo.completeBaseName();
+
     if (fileInfo.suffix().toLower() == "mp4") {
+        QStringList fileNameChunks;
+        for (int i = 0; i < fileName.length(); i += 14) {
+            fileNameChunks << fileName.mid(i, 14);
+        }
+        QString multiLineFileName = fileNameChunks.join("\n");
+
+        QPainter painter(&whitePixmap);
+        QFont font = painter.font();
+        font.setPointSize(20);
+        painter.setFont(font);
+        painter.setPen(Qt::black);
+        QRect textRect = QRect(0, 0, thumbnailSize, thumbnailSize);
+        painter.drawText(textRect, Qt::AlignCenter | Qt::TextWordWrap, multiLineFileName);
         return QIcon(whitePixmap);
     }
 
@@ -48,3 +67,5 @@ QIcon CustomIconFileSystemModel::generateThumbnail(const QString &filePath) cons
     QIcon icon(pixmap);
     return icon;
 }
+
+
