@@ -7,6 +7,7 @@
 #include <QPushButton>
 #include <QSpacerItem>
 #include <QStyle>
+#include <QDebug>
 
 class Sidebar : public QWidget
 {

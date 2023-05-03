@@ -95,46 +95,34 @@ QPushButton* Sidebar::createButton(const QString& text, const QIcon& icon, const
 
 void Sidebar::updateButtonStyles(int targetFolderId) {
     const QString normalStyle =
+        "QPushButton {"
         "text-align: left;"
         "color: #9aa0a6;"
         "background-color: #21252b;"
         "border: none;"
         "padding: 10px;"
         "font-size: 14px;"
-        "font-weight: 700;"
-    ;
+        "font-weight: 700;}"
+        "QPushButton:hover {"
+        "background-color: #393d47 !important;}"
+        ;
 
     const QString hoverStyle =
+        "QPushButton {"
         "text-align: left;"
         "color: #9aa0a6;"
         "background-color: #393d47;"
         "border: none;"
         "padding: 10px;"
         "font-size: 14px;"
-        "font-weight: 700;"
-    ;
+        "font-weight: 700;}"
+        "QPushButton:hover {"
+        "background-color: #5a5e6a !important;}"
+        ;
 
-    allFilesButton->setStyleSheet(normalStyle);
-    imagesButton->setStyleSheet(normalStyle);
-    gifsButton->setStyleSheet(normalStyle);
-    textsButton->setStyleSheet(normalStyle);
-    videosButton->setStyleSheet(normalStyle);
-
-    switch (targetFolderId) {
-    case 0:
-        allFilesButton->setStyleSheet(hoverStyle);
-        break;
-    case 1:
-        imagesButton->setStyleSheet(hoverStyle);
-        break;
-    case 2:
-        gifsButton->setStyleSheet(hoverStyle);
-        break;
-    case 3:
-        textsButton->setStyleSheet(hoverStyle);
-        break;
-    case 4:
-        videosButton->setStyleSheet(hoverStyle);
-        break;
-    }
+    allFilesButton->setStyleSheet(targetFolderId == 0 ? hoverStyle : normalStyle);
+    imagesButton->setStyleSheet(targetFolderId == 1 ? hoverStyle : normalStyle);
+    gifsButton->setStyleSheet(targetFolderId == 2 ? hoverStyle : normalStyle);
+    textsButton->setStyleSheet(targetFolderId == 3 ? hoverStyle : normalStyle);
+    videosButton->setStyleSheet(targetFolderId == 4 ? hoverStyle : normalStyle);
 }
