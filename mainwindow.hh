@@ -39,8 +39,6 @@ protected:
     void resizeEvent(QResizeEvent *event) override;
 
 private slots:
-    void copyTextToClipboard(const QString &text);
-    void copyImageToClipboard();
 
 private:
     QPoint m_dragPosition;
