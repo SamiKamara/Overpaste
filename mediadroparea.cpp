@@ -47,6 +47,7 @@ bool MediaDropArea::isSupportedFileFormat(const QString &fileSuffix) {
             fileSuffix == "jpeg"    ||
             fileSuffix == "gif"     ||
             fileSuffix == "bmp"     ||
+            fileSuffix == "txt"     ||
             fileSuffix == "mp4");
 }
 
@@ -57,6 +58,8 @@ QString MediaDropArea::getTargetFolderPath(const QString &fileSuffix) {
         targetFolderPath += "/files/gifs";
     } else if (fileSuffix == "mp4") {
         targetFolderPath += "/files/videos";
+    } else if (fileSuffix == "txt") {
+        targetFolderPath += "/files/texts";
     } else {
         targetFolderPath += "/files/images";
     }

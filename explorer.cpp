@@ -4,6 +4,8 @@
 #include <QClipboard>
 #include <QGuiApplication>
 #include <QDir>
+#include <QFile>
+#include <QTextStream>
 
 Explorer::Explorer(QWidget *parent)
     : QWidget(parent)
@@ -76,15 +78,28 @@ void Explorer::onFileClicked(const QModelIndex &index)
 {
     QString filePath = m_model->filePath(index);
     QString resolvedPath = resolveShortcut(filePath);
-    QUrl fileUrl = QUrl::fromLocalFile(resolvedPath);
+    QFileInfo fileInfo(resolvedPath);
 
-    QMimeData *mimeData = new QMimeData();
-    mimeData->setUrls(QList<QUrl>() << fileUrl);
+    if (fileInfo.suffix().toLower() == "txt") {
+        QFile file(resolvedPath);
+        if (file.open(QIODevice::ReadOnly)) {
+            QTextStream in(&file);
+            QString content = in.readAll();
+            file.close();
 
-    QClipboard *clipboard = QGuiApplication::clipboard();
-    clipboard->setMimeData(mimeData);
+            QClipboard *clipboard = QGuiApplication::clipboard();
+            clipboard->setText(content);
+        }
+    } else {
+        QUrl fileUrl = QUrl::fromLocalFile(resolvedPath);
+
+        QMimeData *mimeData = new QMimeData();
+        mimeData->setUrls(QList<QUrl>() << fileUrl);
+
+        QClipboard *clipboard = QGuiApplication::clipboard();
+        clipboard->setMimeData(mimeData);
+    }
 }
-
 
 QString Explorer::resolveShortcut(const QString &filePath)
 {
