@@ -30,6 +30,7 @@ Explorer::Explorer(QWidget *parent)
     m_listView->setUniformItemSizes(false);
     m_listView->setMovement(QListView::Static);
     m_listView->setStyleSheet("border: 1px solid transparent;");
+    m_listView->installEventFilter(this);
 
     this->setLayout(layout);
     connect(m_listView, &QListView::clicked, this, &Explorer::onFileClicked);
@@ -181,3 +182,61 @@ void Explorer::onVideosButtonClicked()
     targetFolderId = 4;
     updateModelRootPath();
 }
+
+bool Explorer::eventFilter(QObject *obj, QEvent *event)
+{
+    if (obj == m_listView && event->type() == QEvent::KeyPress)
+    {
+        QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
+        if (keyEvent->key() == Qt::Key_Delete)
+        {
+            QModelIndex currentIndex = m_listView->currentIndex();
+            if (currentIndex.isValid())
+            {
+                QString filePath = m_model->filePath(currentIndex);
+                QFileInfo fileInfo(filePath);
+
+                bool isShortcut = false;
+                QString targetPath;
+
+                #ifdef Q_OS_WIN
+                if (fileInfo.suffix().toLower() == "lnk")
+                {
+                    isShortcut = true;
+                    targetPath = resolveShortcut(filePath);
+                }
+                #endif
+
+                //#ifdef Q_OS_LINUX
+                //    if (fileInfo.isSymLink()) {
+                //        isShortcut = true;
+                //        targetPath = fileInfo.symLinkTarget();
+                //    }
+                //#endif
+
+                if (isShortcut)
+                {
+                    QFile targetFile(targetPath);
+                    if (!targetFile.remove())
+                    {
+                        QMessageBox::warning(this, tr("Delete File"), tr("Could not delete target file. Please check permissions."));
+                    }
+                }
+
+                QFile file(filePath);
+                if (file.remove())
+                {
+                    m_model->remove(currentIndex);
+                }
+                else
+                {
+                    QMessageBox::warning(this, tr("Delete File"), tr("Could not delete file. Please check permissions."));
+                }
+            }
+            return true;
+        }
+    }
+
+    return QWidget::eventFilter(obj, event);
+}
+

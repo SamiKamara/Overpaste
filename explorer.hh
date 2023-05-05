@@ -11,6 +11,9 @@
 #include <QFile>
 #include <QFileInfo>
 #include <QDir>
+#include <QEvent>
+#include <QKeyEvent>
+#include <QMessageBox>
 
 #include "customiconfilesystemmodel.hh"
 
@@ -44,6 +47,9 @@ public slots:
     void onGifsButtonClicked();
     void onTextsButtonClicked();
     void onVideosButtonClicked();
+
+protected:
+    bool eventFilter(QObject *obj, QEvent *event) override;
 
 signals:
     void targetFolderChanged(int targetFolderId);
