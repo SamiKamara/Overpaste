@@ -74,7 +74,15 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(explorer, &Explorer::targetFolderChanged, sidebar, &Sidebar::updateButtonStyles);
 
-    setFixedSize(800, 500);
+    resize(800, 500);
+
+    //This sizeGrip is added mainly for debugging purposes. full resizing solution is to be added later
+    QSizeGrip *sizeGrip = new QSizeGrip(this);
+    sizeGrip->setFixedSize(10, 10);
+    sizeGrip->setStyleSheet("background-color: rgba(105, 105, 105, 24);");
+
+    sizeGrip->move(width() - sizeGrip->width(), height() - sizeGrip->height());
+    sizeGrip->raise();
 }
 
 MainWindow::~MainWindow() {
@@ -112,7 +120,13 @@ void MainWindow::onDragFinished() {
 }
 
 void MainWindow::resizeEvent(QResizeEvent* event) {
+    QSizeGrip *sizeGrip = findChild<QSizeGrip *>();
+    if (sizeGrip) {
+        sizeGrip->move(width() - sizeGrip->width(), height() - sizeGrip->height());
+    }
+
     m_borderWidget->setGeometry(0, 0, width(), height());
+
     QWidget::resizeEvent(event);
 }
 

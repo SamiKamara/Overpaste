@@ -23,6 +23,7 @@
 #include <QSplitter>
 #include <mediadroparea.hh>
 #include <borderwidget.hh>
+#include <QSizeGrip>
 
 class MainWindow : public QWidget
 {
