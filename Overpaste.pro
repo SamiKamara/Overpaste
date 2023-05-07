@@ -16,6 +16,7 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     mediadroparea.cpp \
+    overlaywindow.cpp \
     sidebar.cpp
 
 HEADERS += \
@@ -24,6 +25,7 @@ HEADERS += \
     explorer.hh \
     mainwindow.hh \
     mediadroparea.hh \
+    overlaywindow.hh \
     sidebar.hh
 
 FORMS += \

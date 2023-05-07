@@ -23,6 +23,7 @@
 #include <mediadroparea.hh>
 #include <borderwidget.hh>
 #include "explorer.hh"
+#include "overlaywindow.hh"
 
 void setupTitleBar(QFrame *titleBar, QWidget *parent);
 QPushButton *createTitleBarButton(const QString &text, QWidget *parent);
@@ -83,6 +84,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     sizeGrip->move(width() - sizeGrip->width(), height() - sizeGrip->height());
     sizeGrip->raise();
+
+    fullscreenOn = false;
 }
 
 MainWindow::~MainWindow() {
@@ -193,4 +196,41 @@ QFrame *createGripBar(QWidget *parent) {
     gripBar->setStyleSheet("background-color: #21252b;");
     return gripBar;
 }
+
+void MainWindow::keyPressEvent(QKeyEvent *event) {
+    if ((event->modifiers() & Qt::ShiftModifier) && event->key() == Qt::Key_N) {
+        toggleFullscreen();
+    } else {
+        QWidget::keyPressEvent(event);
+    }
+}
+
+bool MainWindow::handleOverlayKeyPressEvent(QKeyEvent *event) {
+    if ((event->modifiers() & Qt::ShiftModifier) && event->key() == Qt::Key_N) {
+        toggleFullscreen();
+        return true;
+    }
+
+    return false;
+}
+
+
+void MainWindow::toggleFullscreen() {
+    fullscreenOn = !fullscreenOn;
+
+    if (fullscreenOn) {
+        overlayWindow = new OverlayWindow(this);
+        overlayWindow->show();
+
+    } else {
+        overlayWindow->close();
+        delete overlayWindow;
+        overlayWindow = nullptr;
+    }
+
+    qDebug() << "Fullscreen mode:" << (fullscreenOn ? "ON" : "OFF");
+}
+
+
+
 

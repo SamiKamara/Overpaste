@@ -25,6 +25,8 @@
 #include <borderwidget.hh>
 #include <QSizeGrip>
 
+class OverlayWindow;
+
 class MainWindow : public QWidget
 {
     Q_OBJECT
@@ -32,12 +34,14 @@ class MainWindow : public QWidget
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+    bool handleOverlayKeyPressEvent(QKeyEvent *event);
 
 protected:
     void mousePressEvent(QMouseEvent *event) override;
     void mouseMoveEvent(QMouseEvent *event) override;
     void mouseReleaseEvent(QMouseEvent *event) override;
     void resizeEvent(QResizeEvent *event) override;
+    void keyPressEvent(QKeyEvent *event) override;
 
 private slots:
 
@@ -46,6 +50,9 @@ private:
     BorderWidget* m_borderWidget;
     bool m_isDragging;
     void onDragFinished();
+    bool fullscreenOn;
+    OverlayWindow *overlayWindow;
+    void toggleFullscreen();
 };
 
 #endif // MAINWINDOW_HH
