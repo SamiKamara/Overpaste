@@ -80,7 +80,7 @@ MainWindow::MainWindow(QWidget *parent)
     //This sizeGrip is added mainly for debugging purposes. full resizing solution is to be added later
     QSizeGrip *sizeGrip = new QSizeGrip(this);
     sizeGrip->setFixedSize(10, 10);
-    sizeGrip->setStyleSheet("background-color: rgba(105, 105, 105, 24);");
+    sizeGrip->setStyleSheet("background-color: rgba(105, 105, 105, 0);"); //edit the last number to make this visible for debugging
 
     sizeGrip->move(width() - sizeGrip->width(), height() - sizeGrip->height());
     sizeGrip->raise();

@@ -25,13 +25,12 @@ QVariant CustomIconFileSystemModel::data(const QModelIndex &index, int role) con
         return thumbnailIcon;
     }
 
-    if (role == Qt::ForegroundRole) {
-        return QColor(154, 160, 166);
+    if (role == Qt::DisplayRole) {
+        return QString("");
     }
 
     return QFileSystemModel::data(index, role);
 }
-
 
 QIcon CustomIconFileSystemModel::generateThumbnail(const QString &filePath) const {
     static const int thumbnailSize = 100;
@@ -42,10 +41,15 @@ QIcon CustomIconFileSystemModel::generateThumbnail(const QString &filePath) cons
     QPixmap whitePixmap(thumbnailSize, thumbnailSize);
 
     if (fileSuffix == "txt") {
-        whitePixmap.fill(Qt::black);
+        whitePixmap.fill(QColor(25, 25, 25, 255));
     } else {
-        whitePixmap.fill(Qt::white);
+        whitePixmap.fill(QColor(244, 244, 244, 255));
     }
+
+    QPainter painter(&whitePixmap);
+    QFont font = painter.font();
+    font.setPointSize(10);
+    painter.setFont(font);
 
     if (fileSuffix == "mp4" || fileSuffix == "txt") {
         QStringList fileNameChunks;
@@ -59,7 +63,7 @@ QIcon CustomIconFileSystemModel::generateThumbnail(const QString &filePath) cons
                 contentToDisplay = in.read(80);
                 file.close();
             }
-            textColor = Qt::white;
+            textColor = QColor(154, 160, 166, 255);
         } else {
             contentToDisplay = "Video:\n" + fileInfo.completeBaseName();
             textColor = Qt::black;
@@ -70,19 +74,37 @@ QIcon CustomIconFileSystemModel::generateThumbnail(const QString &filePath) cons
         }
         QString multiLineFileName = fileNameChunks.join("\n");
 
-        QPainter painter(&whitePixmap);
-        QFont font = painter.font();
-        font.setPointSize(10);
-        painter.setFont(font);
         painter.setPen(textColor);
         QRect textRect = QRect(0, 0, thumbnailSize, thumbnailSize);
         painter.drawText(textRect, Qt::AlignCenter | Qt::TextWordWrap, multiLineFileName);
-        return QIcon(whitePixmap);
     }
+
+    QString fileName = fileInfo.fileName();
+    QRect bottomTextRect = QRect(0, thumbnailSize - 20, thumbnailSize, 20);
+
+    QRect barRect(bottomTextRect);
+    painter.setBrush(QColor(0, 0, 0, 180));
+    painter.setPen(Qt::NoPen);
+    painter.drawRect(barRect);
+
+    QFont fileNameFont = painter.font();
+
+    int fontSize = 10;
+    if (fileName.length() > 18) {
+        fontSize = static_cast<int>(10.0 * 16.0 / fileName.length());
+        if (fontSize < 1) {
+            fontSize = 1;
+        }
+    }
+
+    fileNameFont.setPointSize(fontSize);
+    painter.setFont(fileNameFont);
+    painter.setPen(QColor(233, 233, 233, 255));
+    painter.drawText(bottomTextRect, Qt::AlignCenter, fileName);
 
     QImageReader reader(filePath);
     if (!reader.canRead()) {
-        return QIcon::fromTheme("unknown");
+        return QIcon(whitePixmap);
     }
 
     reader.setScaledSize(QSize(thumbnailSize, thumbnailSize));
@@ -93,7 +115,22 @@ QIcon CustomIconFileSystemModel::generateThumbnail(const QString &filePath) cons
     }
 
     QPixmap pixmap = QPixmap::fromImage(thumbnail);
+
+    QPainter pixmapPainter(&pixmap);
+    pixmapPainter.setFont(font);
+
+    pixmapPainter.setBrush(QColor(0, 0, 0, 180));
+    pixmapPainter.setPen(Qt::NoPen);
+    pixmapPainter.drawRect(barRect);
+
+    pixmapPainter.setFont(fileNameFont);
+    pixmapPainter.setPen(QColor(233, 233, 233, 255));
+    pixmapPainter.drawText(bottomTextRect, Qt::AlignCenter, fileName);
+
     QIcon icon(pixmap);
     return icon;
 }
+
+
+
 
