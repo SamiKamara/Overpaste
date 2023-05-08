@@ -5,6 +5,7 @@
 #include <QCoreApplication>
 #include <QIcon>
 #include <QPainter>
+#include <QCache>
 
 #include "explorer.hh"
 
@@ -17,6 +18,7 @@ public:
 
 private:
     QIcon generateThumbnail(const QString &filePath) const;
+    mutable QCache<QString, QIcon> m_iconCache{500};
 };
 
 #endif // CUSTOMICONFILESYSTEMMODEL_HH
