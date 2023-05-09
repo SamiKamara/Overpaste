@@ -33,11 +33,40 @@ QVariant CustomIconFileSystemModel::data(const QModelIndex &index, int role) con
 }
 
 QIcon CustomIconFileSystemModel::generateThumbnail(const QString &filePath) const {
+    QPixmap thumbnailPixmap = createThumbnailPixmap(filePath);
+    QIcon icon(thumbnailPixmap);
+    return icon;
+}
+
+QPixmap CustomIconFileSystemModel::createThumbnailPixmap(const QString &filePath) const {
     static const int thumbnailSize = 100;
 
     QFileInfo fileInfo(filePath);
     QString fileSuffix = fileInfo.suffix().toLower();
 
+    QPixmap pixmap = createPixmapFromImage(filePath, thumbnailSize);
+    if (pixmap.isNull()) {
+        QPixmap whitePixmap = createWhitePixmap(fileSuffix, thumbnailSize);
+        pixmap = whitePixmap;
+    }
+
+    QPainter painter(&pixmap);
+    setPainterFont(painter, 10);
+
+    if (fileSuffix == "mp4" || fileSuffix == "txt") {
+        QString contentToDisplay = createContentToDisplay(fileSuffix, fileInfo, filePath);
+        QColor textColor = (fileSuffix == "txt") ? QColor(154, 160, 166, 255) : Qt::black;
+
+        drawTextOnPixmap(painter, contentToDisplay, textColor, thumbnailSize);
+    }
+
+    drawFileNameOnThumbnail(painter, fileInfo.fileName(), thumbnailSize);
+
+    return pixmap;
+}
+
+
+QPixmap CustomIconFileSystemModel::createWhitePixmap(const QString &fileSuffix, int thumbnailSize) const {
     QPixmap whitePixmap(thumbnailSize, thumbnailSize);
 
     if (fileSuffix == "txt") {
@@ -46,40 +75,46 @@ QIcon CustomIconFileSystemModel::generateThumbnail(const QString &filePath) cons
         whitePixmap.fill(QColor(244, 244, 244, 255));
     }
 
-    QPainter painter(&whitePixmap);
+    return whitePixmap;
+}
+
+void CustomIconFileSystemModel::setPainterFont(QPainter &painter, int fontSize) const {
     QFont font = painter.font();
-    font.setPointSize(10);
+    font.setPointSize(fontSize);
     painter.setFont(font);
+}
 
-    if (fileSuffix == "mp4" || fileSuffix == "txt") {
-        QStringList fileNameChunks;
-        QString contentToDisplay;
-        QColor textColor;
+QString CustomIconFileSystemModel::createContentToDisplay(const QString &fileSuffix, const QFileInfo &fileInfo, const QString &filePath) const {
+    QString contentToDisplay;
 
-        if (fileSuffix == "txt") {
-            QFile file(filePath);
-            if (file.open(QIODevice::ReadOnly)) {
-                QTextStream in(&file);
-                contentToDisplay = in.read(80);
-                file.close();
-            }
-            textColor = QColor(154, 160, 166, 255);
-        } else {
-            contentToDisplay = "Video:\n" + fileInfo.completeBaseName();
-            textColor = Qt::black;
+    if (fileSuffix == "txt") {
+        QFile file(filePath);
+        if (file.open(QIODevice::ReadOnly)) {
+            QTextStream in(&file);
+            contentToDisplay = in.read(80);
+            file.close();
         }
-
-        for (int i = 0; i < contentToDisplay.length(); i += 14) {
-            fileNameChunks << contentToDisplay.mid(i, 14);
-        }
-        QString multiLineFileName = fileNameChunks.join("\n");
-
-        painter.setPen(textColor);
-        QRect textRect = QRect(0, 0, thumbnailSize, thumbnailSize);
-        painter.drawText(textRect, Qt::AlignCenter | Qt::TextWordWrap, multiLineFileName);
+    } else {
+        contentToDisplay = "Video:\n" + fileInfo.completeBaseName();
     }
 
-    QString fileName = fileInfo.fileName();
+    return contentToDisplay;
+}
+
+void CustomIconFileSystemModel::drawTextOnPixmap(QPainter &painter, const QString &contentToDisplay, const QColor &textColor, int thumbnailSize) const {
+    QStringList fileNameChunks;
+
+    for (int i = 0; i < contentToDisplay.length(); i += 14) {
+        fileNameChunks << contentToDisplay.mid(i, 14);
+    }
+    QString multiLineFileName = fileNameChunks.join("\n");
+
+    painter.setPen(textColor);
+    QRect textRect = QRect(0, 0, thumbnailSize, thumbnailSize);
+    painter.drawText(textRect, Qt::AlignCenter | Qt::TextWordWrap, multiLineFileName);
+}
+
+void CustomIconFileSystemModel::drawFileNameOnThumbnail(QPainter &painter, const QString &fileName, int thumbnailSize) const {
     QRect bottomTextRect = QRect(0, thumbnailSize - 20, thumbnailSize, 20);
 
     QRect barRect(bottomTextRect);
@@ -88,7 +123,15 @@ QIcon CustomIconFileSystemModel::generateThumbnail(const QString &filePath) cons
     painter.drawRect(barRect);
 
     QFont fileNameFont = painter.font();
+    int fontSize = calculateFontSize(fileName);
 
+    fileNameFont.setPointSize(fontSize);
+    painter.setFont(fileNameFont);
+    painter.setPen(QColor(233, 233, 233, 255));
+    painter.drawText(bottomTextRect, Qt::AlignCenter, fileName);
+}
+
+int CustomIconFileSystemModel::calculateFontSize(const QString &fileName) const {
     int fontSize = 10;
     if (fileName.length() > 18) {
         fontSize = static_cast<int>(10.0 * 16.0 / fileName.length());
@@ -96,40 +139,26 @@ QIcon CustomIconFileSystemModel::generateThumbnail(const QString &filePath) cons
             fontSize = 1;
         }
     }
+    return fontSize;
+}
 
-    fileNameFont.setPointSize(fontSize);
-    painter.setFont(fileNameFont);
-    painter.setPen(QColor(233, 233, 233, 255));
-    painter.drawText(bottomTextRect, Qt::AlignCenter, fileName);
-
+QPixmap CustomIconFileSystemModel::createPixmapFromImage(const QString &filePath, int thumbnailSize) const {
     QImageReader reader(filePath);
     if (!reader.canRead()) {
-        return QIcon(whitePixmap);
+        return QPixmap();
     }
 
     reader.setScaledSize(QSize(thumbnailSize, thumbnailSize));
 
     QImage thumbnail = reader.read();
     if (thumbnail.isNull()) {
-        return QIcon(whitePixmap);
+        return QPixmap();
     }
 
     QPixmap pixmap = QPixmap::fromImage(thumbnail);
-
-    QPainter pixmapPainter(&pixmap);
-    pixmapPainter.setFont(font);
-
-    pixmapPainter.setBrush(QColor(0, 0, 0, 180));
-    pixmapPainter.setPen(Qt::NoPen);
-    pixmapPainter.drawRect(barRect);
-
-    pixmapPainter.setFont(fileNameFont);
-    pixmapPainter.setPen(QColor(233, 233, 233, 255));
-    pixmapPainter.drawText(bottomTextRect, Qt::AlignCenter, fileName);
-
-    QIcon icon(pixmap);
-    return icon;
+    return pixmap;
 }
+
 
 
 
