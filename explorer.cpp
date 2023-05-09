@@ -31,6 +31,7 @@ Explorer::Explorer(QWidget *parent)
     m_listView->setMovement(QListView::Static);
     m_listView->setStyleSheet("border: 1px solid transparent;");
     m_listView->installEventFilter(this);
+    m_listView->setItemDelegate(new BorderDelegate(this));
 
     this->setLayout(layout);
     connect(m_listView, &QListView::clicked, this, &Explorer::onFileClicked);
