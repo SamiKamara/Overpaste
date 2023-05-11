@@ -92,12 +92,16 @@ MainWindow::~MainWindow() {
 }
 
 void MainWindow::mousePressEvent(QMouseEvent *event) {
-
     m_isDragging = false;
     int right_side_limit = width() - 100;
 
     if (event->button() == Qt::LeftButton && event->pos().y() < 50 && event->pos().x() < right_side_limit) {
-        m_dragPosition = event->globalPosition().toPoint() - frameGeometry().topLeft();
+        if (isMaximized()) {
+            resetWindowGeometry();
+        } else {
+            m_dragPosition = event->globalPosition().toPoint() - frameGeometry().topLeft();
+        }
+
         event->accept();
         m_isDragging = true;
     }
@@ -147,16 +151,19 @@ void setupTitleBar(QFrame *titleBar, QWidget *parent) {
     QObject::connect(minimizeButton, &QPushButton::clicked, parent, &QWidget::showMinimized);
 
     QPushButton *restoreButton = createTitleBarButton(parent->isMaximized() ? ":/icons/window-restore.svg" : ":/icons/window-maximize.svg", parent);
+    restoreButton->setObjectName("restoreButton");
+
     QObject::connect(restoreButton, &QPushButton::clicked, parent, [parent, restoreButton]() {
+        MainWindow* mainWindow = static_cast<MainWindow*>(parent);
         if (parent->isMaximized()) {
             parent->showNormal();
             restoreButton->setIcon(QIcon::fromTheme(":/icons/window-maximize.svg"));
         } else {
+            mainWindow->storedNormalWindowWidth = mainWindow->width();
             parent->showMaximized();
             restoreButton->setIcon(QIcon::fromTheme(":/icons/window-restore.svg"));
         }
-    }
-    );
+    });
 
     QFrame *gripBar = createGripBar(parent);
 
@@ -214,7 +221,6 @@ bool MainWindow::handleOverlayKeyPressEvent(QKeyEvent *event) {
     return false;
 }
 
-
 void MainWindow::toggleFullscreen() {
     fullscreenOn = !fullscreenOn;
 
@@ -231,6 +237,18 @@ void MainWindow::toggleFullscreen() {
     qDebug() << "Fullscreen mode:" << (fullscreenOn ? "ON" : "OFF");
 }
 
+void MainWindow::resetWindowGeometry() {
+    if (isMaximized()) {
+        showNormal();
 
+        QPushButton *restoreButton = findChild<QPushButton *>("restoreButton");
+
+        if (restoreButton) {
+            restoreButton->setIcon(QIcon::fromTheme(":/icons/window-maximize.svg"));
+        }
+
+        m_dragPosition = QPoint(storedNormalWindowWidth / 2, 14);
+    }
+}
 
 

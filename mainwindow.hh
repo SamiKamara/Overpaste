@@ -35,6 +35,7 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
     bool handleOverlayKeyPressEvent(QKeyEvent *event);
+    int storedNormalWindowWidth;
 
 protected:
     void mousePressEvent(QMouseEvent *event) override;
@@ -53,6 +54,7 @@ private:
     bool fullscreenOn;
     OverlayWindow *overlayWindow;
     void toggleFullscreen();
+    void resetWindowGeometry();
 };
 
 #endif // MAINWINDOW_HH
