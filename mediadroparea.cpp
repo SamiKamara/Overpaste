@@ -22,11 +22,15 @@ void MediaDropArea::dropEvent(QDropEvent *event) {
     const QMimeData *mimeData = event->mimeData();
     if (mimeData->hasUrls()) {
         QList<QUrl> urlList = mimeData->urls();
+        bool fileSupported = false;
+
         for (const QUrl &url : urlList) {
             QFileInfo fileInfo(url.toLocalFile());
             QString fileSuffix = fileInfo.suffix().toLower();
 
             if (isSupportedFileFormat(fileSuffix)) {
+                fileSupported = true;
+
                 QString originalFilename = fileInfo.fileName();
                 QString targetFolderPath = getTargetFolderPath(fileSuffix);
                 QString buildPath = targetFolderPath + "/" + originalFilename;
@@ -35,8 +39,14 @@ void MediaDropArea::dropEvent(QDropEvent *event) {
                 copyFileToPath(url.toLocalFile(), buildPath);
 
                 setText(getSavedMediaFileMessage(originalFilename, fileSuffix));
+
+                QTimer::singleShot(4000, this, &MediaDropArea::resetInfoMessage);
                 break;
             }
+        }
+
+        if (!fileSupported) {
+            displayUnsupportedFileMessage();
         }
     }
 }
@@ -100,10 +110,21 @@ QString MediaDropArea::getSavedMediaFileMessage(const QString &filename, const Q
         folderName = "gifs";
     } else if (fileSuffix == "mp4") {
         folderName = "videos";
+    } else if (fileSuffix == "txt") {
+        folderName = "texts";
     } else {
         folderName = "images";
     }
 
     QString message = "File saved as " + filename + " in " + folderName + " folder";
     return message;
+}
+
+void MediaDropArea::resetInfoMessage() {
+    setText("Drop file here, to save as pasta");
+}
+
+void MediaDropArea::displayUnsupportedFileMessage() {
+    setText("Unsupported file type.");
+    QTimer::singleShot(3000, this, &MediaDropArea::resetInfoMessage);
 }

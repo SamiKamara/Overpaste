@@ -10,6 +10,7 @@
 #include <QFile>
 #include <QApplication>
 #include <QDir>
+#include <QTimer>
 
 class MediaDropArea : public QLabel {
 public:
@@ -25,6 +26,8 @@ private:
     bool isSupportedFileFormat(const QString &fileSuffix);
     QString getSavedMediaFileMessage(const QString &filename, const QString &fileSuffix);
     void createShortcut(const QString &sourcePath, const QString &shortcutPath);
+    void resetInfoMessage();
+    void displayUnsupportedFileMessage();
 };
 
 #endif // MEDIAROPAREA_H
