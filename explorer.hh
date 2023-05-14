@@ -16,6 +16,7 @@
 #include <QMessageBox>
 #include "borderdelegate.hh"
 #include "customiconfilesystemmodel.hh"
+#include <QLabel>
 
 #ifdef Q_OS_WIN
     #include <windows.h>
@@ -36,10 +37,12 @@ public:
 private:
     QFileSystemModel *m_model;
     QListView *m_listView;
+    QLabel *m_emptyLabel;
 
     void updateModelRootPath();
 private slots:
     void onFileClicked(const QModelIndex &index);
+    void onDirectoryLoaded(const QString &);
 
 public slots:
     void onImagesButtonClicked();

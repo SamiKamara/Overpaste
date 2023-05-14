@@ -11,6 +11,7 @@ Explorer::Explorer(QWidget *parent)
     : QWidget(parent)
 {
     targetFolderId = 0;
+
     QVBoxLayout *layout = new QVBoxLayout(this);
 
     m_listView = new QListView(this);
@@ -33,8 +34,17 @@ Explorer::Explorer(QWidget *parent)
     m_listView->installEventFilter(this);
     m_listView->setItemDelegate(new BorderDelegate(this));
 
+    m_emptyLabel = new QLabel("This folder is empty", this);
+    m_emptyLabel->setAlignment(Qt::AlignCenter);
+    m_emptyLabel->hide();
+    setStyleSheet("color: rgb(154, 160, 166);");
+
+    layout->addWidget(m_emptyLabel);
+
     this->setLayout(layout);
     connect(m_listView, &QListView::clicked, this, &Explorer::onFileClicked);
+    connect(m_model, &QFileSystemModel::directoryLoaded, this, &Explorer::onDirectoryLoaded);
+
 
     updateModelRootPath();
 }
@@ -240,4 +250,19 @@ bool Explorer::eventFilter(QObject *obj, QEvent *event)
 
     return QWidget::eventFilter(obj, event);
 }
+
+void Explorer::onDirectoryLoaded(const QString &)
+{
+    if (m_model->rowCount(m_listView->rootIndex()) == 0)
+    {
+        m_emptyLabel->show();
+        m_listView->hide();
+    }
+    else
+    {
+        m_emptyLabel->hide();
+        m_listView->show();
+    }
+}
+
 
