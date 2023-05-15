@@ -24,6 +24,8 @@
 #include <mediadroparea.hh>
 #include <borderwidget.hh>
 #include <QSizeGrip>
+#include <QStackedLayout>
+#include <QEvent>
 
 class OverlayWindow;
 
@@ -43,6 +45,8 @@ protected:
     void mouseReleaseEvent(QMouseEvent *event) override;
     void resizeEvent(QResizeEvent *event) override;
     void keyPressEvent(QKeyEvent *event) override;
+    void dragEnterEvent(QDragEnterEvent *event) override;
+    void dragLeaveEvent(QDragLeaveEvent *event) override;
 
 private slots:
 
@@ -55,6 +59,8 @@ private:
     OverlayWindow *overlayWindow;
     void toggleFullscreen();
     void resetWindowGeometry();
+    void showMediaDropArea(bool visible);
+    MediaDropArea *dropArea;
 };
 
 #endif // MAINWINDOW_HH

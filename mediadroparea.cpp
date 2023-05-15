@@ -7,15 +7,27 @@ void MediaDropArea::createShortcut(const QString &sourcePath, const QString &sho
 MediaDropArea::MediaDropArea(QWidget *parent) : QLabel(parent) {
     setAcceptDrops(true);
     setAlignment(Qt::AlignCenter);
-    setText("Drop file here, to save as pasta");
+    QFont font = QFont("Arial", 20);
+    setFont(font);
+    setText("");
     setFrameStyle(QFrame::Box | QFrame::Sunken);
-    setStyleSheet("color: rgb(154, 160, 166);");
+    setStyleSheet("background-color: rgba(0, 0, 0, 0); color: rgb(154, 160, 166);");
+    setAttribute(Qt::WA_TransparentForMouseEvents);
 }
 
 void MediaDropArea::dragEnterEvent(QDragEnterEvent *event) {
     if (event->mimeData()->hasUrls()) {
-        event->acceptProposedAction();
+        setStyleSheet("background-color: rgba(154, 160, 166, 50); color: rgb(154, 160, 166);");
+        setText("Drop file here, to save as pasta");
+        event->acceptProposedAction();      
     }
+}
+
+void MediaDropArea::dragLeaveEvent(QDragLeaveEvent *event) {
+    setStyleSheet("background-color: rgba(0, 0, 0, 0); color: rgb(154, 160, 166);");
+    setAttribute(Qt::WA_TransparentForMouseEvents);
+    setText("");
+    event->accept();
 }
 
 void MediaDropArea::dropEvent(QDropEvent *event) {
@@ -40,7 +52,10 @@ void MediaDropArea::dropEvent(QDropEvent *event) {
 
                 setText(getSavedMediaFileMessage(originalFilename, fileSuffix));
 
-                QTimer::singleShot(4000, this, &MediaDropArea::resetInfoMessage);
+                QTimer::singleShot(3000, this, &MediaDropArea::resetInfoMessage);
+
+                event->accept();
+
                 break;
             }
         }
@@ -48,6 +63,8 @@ void MediaDropArea::dropEvent(QDropEvent *event) {
         if (!fileSupported) {
             displayUnsupportedFileMessage();
         }
+
+        setAttribute(Qt::WA_TransparentForMouseEvents);
     }
 }
 
@@ -121,10 +138,12 @@ QString MediaDropArea::getSavedMediaFileMessage(const QString &filename, const Q
 }
 
 void MediaDropArea::resetInfoMessage() {
-    setText("Drop file here, to save as pasta");
+    setStyleSheet("background-color: rgba(0, 0, 0, 0); color: rgb(154, 160, 166);");
+    setText("");
 }
 
 void MediaDropArea::displayUnsupportedFileMessage() {
     setText("Unsupported file type.");
     QTimer::singleShot(3000, this, &MediaDropArea::resetInfoMessage);
 }
+

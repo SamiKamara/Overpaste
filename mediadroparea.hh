@@ -1,5 +1,5 @@
-#ifndef MEDIAROPAREA_H
-#define MEDIAROPAREA_H
+#ifndef MEDIAROPAREA_HH
+#define MEDIAROPAREA_HH
 
 #include <QLabel>
 #include <QDragEnterEvent>
@@ -17,6 +17,7 @@ public:
     MediaDropArea(QWidget *parent = nullptr);
 protected:
     void dragEnterEvent(QDragEnterEvent *event) override;
+    void dragLeaveEvent(QDragLeaveEvent *event) override;
     void dropEvent(QDropEvent *event) override;
 private:
     QString getTargetFolderPath(const QString &fileSuffix);
@@ -30,4 +31,4 @@ private:
     void displayUnsupportedFileMessage();
 };
 
-#endif // MEDIAROPAREA_H
+#endif // MEDIAROPAREA_HH

@@ -56,15 +56,17 @@ MainWindow::MainWindow(QWidget *parent)
     connect(sidebar, &Sidebar::textsButtonClicked, explorer, &Explorer::onTextsButtonClicked);
     connect(sidebar, &Sidebar::videosButtonClicked, explorer, &Explorer::onVideosButtonClicked);
 
-    // Create the image drop area
-    MediaDropArea *dropArea = new MediaDropArea(contentWidget);
-    dropArea->setMinimumHeight(150);
-    contentLayout->addWidget(dropArea);
-    splitter->addWidget(contentWidget);
+    QStackedLayout *stackedLayout = new QStackedLayout();
+    stackedLayout->addWidget(splitter);
+
+    dropArea = new MediaDropArea(this);
+    dropArea->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    stackedLayout->addWidget(dropArea);
+
     QVBoxLayout *mainLayout = new QVBoxLayout(this);
     mainLayout->setSpacing(0);
     mainLayout->addWidget(titleBar);
-    mainLayout->addWidget(splitter);
+    mainLayout->addLayout(stackedLayout);
     mainLayout->setContentsMargins(0, 0, 0, 0);
     contentLayout->setContentsMargins(0, 0, 0, 0);
 
@@ -77,15 +79,18 @@ MainWindow::MainWindow(QWidget *parent)
 
     resize(800, 500);
 
-    //This sizeGrip is added mainly for debugging purposes. full resizing solution is to be added later
+    dropArea->setGeometry(0, 0, width(), height());
+
     QSizeGrip *sizeGrip = new QSizeGrip(this);
     sizeGrip->setFixedSize(10, 10);
-    sizeGrip->setStyleSheet("background-color: rgba(105, 105, 105, 0);"); //edit the last number to make this visible for debugging
-
+    sizeGrip->setStyleSheet("background-color: rgba(105, 105, 105, 0);");
     sizeGrip->move(width() - sizeGrip->width(), height() - sizeGrip->height());
     sizeGrip->raise();
 
     fullscreenOn = false;
+
+    showMediaDropArea(true);
+    setAcceptDrops(true);
 }
 
 MainWindow::~MainWindow() {
@@ -133,6 +138,7 @@ void MainWindow::resizeEvent(QResizeEvent* event) {
     }
 
     m_borderWidget->setGeometry(0, 0, width(), height());
+    dropArea->setGeometry(0, 0, width(), height());
 
     QWidget::resizeEvent(event);
 }
@@ -251,4 +257,23 @@ void MainWindow::resetWindowGeometry() {
     }
 }
 
+void MainWindow::showMediaDropArea(bool visible) {
+    MediaDropArea *dropArea = findChild<MediaDropArea *>();
+    if (dropArea) {
+        dropArea->setVisible(visible);
+        if (visible) {
+            dropArea->raise();
+        }
+    }
+}
 
+void MainWindow::dragEnterEvent(QDragEnterEvent *event) {
+    if (event->mimeData()->hasUrls()) {
+        dropArea->setAttribute(Qt::WA_TransparentForMouseEvents, false);
+        event->acceptProposedAction();
+    }
+}
+
+void MainWindow::dragLeaveEvent(QDragLeaveEvent *event) {
+    event->accept();
+}
