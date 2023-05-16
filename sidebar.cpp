@@ -16,12 +16,20 @@ QString createLabelStyle() {
 Sidebar::Sidebar(QWidget *parent)
     : QWidget(parent)
 {
+    bool isParentMainWindow = (parent && parent->objectName() == "MainWindow");
+    qDebug() << "Is parent MainWindow: " << isParentMainWindow;
+
+    QFrame *sidebarFrame = new QFrame(this);
+
+    if (!isParentMainWindow) {
+        sidebarFrame->setStyleSheet("background-color: rgba(33, 37, 43, 50%);");
+    }else{
+        sidebarFrame->setStyleSheet("background-color: rgba(33, 37, 43, 100%);");
+    }
+
     sidebarLayout = new QVBoxLayout(this);
     sidebarLayout->setContentsMargins(0, 0, 0, 0);
     setFixedWidth(250);
-
-    QFrame *sidebarFrame = new QFrame(this);
-    sidebarFrame->setStyleSheet("background-color: #21252b;");
 
     QVBoxLayout *sidebarContentLayout = new QVBoxLayout(sidebarFrame);
     sidebarContentLayout->setContentsMargins(0, 0, 0, 0);
@@ -30,8 +38,8 @@ Sidebar::Sidebar(QWidget *parent)
     const QString buttonStyle =
         "QPushButton {"
         "text-align: left;"
-        "color: #9aa0a6;"
-        "background-color: #21252b;"
+        "color: rgba(154, 160, 166, " + QString(isParentMainWindow ? "1.0" : "0.8") + ");"
+        "background-color: rgba(33, 37, 43, " + QString(isParentMainWindow ? "1.0" : "0.5") + ");"
         "border: none;"
         "padding: 10px;"
         "font-size: 14px;"

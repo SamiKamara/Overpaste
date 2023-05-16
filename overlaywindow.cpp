@@ -5,7 +5,7 @@
 
 OverlayWindow::OverlayWindow(MainWindow *parent)
     : QWidget(parent), m_mainWindow(parent)
-{
+{    
     setWindowTitle("Overlay Window");
     setWindowFlags(Qt::Window | Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
 
@@ -42,4 +42,7 @@ OverlayWindow::OverlayWindow(MainWindow *parent)
 
     KeyListener *keyListener = new KeyListener(this);
     connect(keyListener, &KeyListener::hotKeyPressed, m_mainWindow, &MainWindow::toggleFullscreen);
+
+    mainLayout->setContentsMargins(0, 0, 0, 0);
+    contentLayout->setContentsMargins(0, 0, 0, 0);
 }

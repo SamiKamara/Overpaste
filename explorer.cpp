@@ -48,7 +48,7 @@ Explorer::Explorer(MainWindow* window, QWidget *parent)
     connect(m_model, &QFileSystemModel::directoryLoaded, this, &Explorer::onDirectoryLoaded);
 
     updateModelRootPath();
-    qDebug() << "Expl. FullscreenOn state: " << window->isFullscreenOn();
+    //qDebug() << "Expl. FullscreenOn state: " << window->isFullscreenOn();
 }
 
 void Explorer::updateModelRootPath()

@@ -31,6 +31,7 @@ QFrame *createGripBar(QWidget *parent);
 MainWindow::MainWindow(QWidget *parent)
     : QWidget(parent)
 {
+    setObjectName("MainWindow");
     fullscreenOn = false;
     setWindowFlags(Qt::FramelessWindowHint);
     setWindowTitle("Custom Title Bar");

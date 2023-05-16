@@ -10,7 +10,7 @@
 
 CustomIconFileSystemModel::CustomIconFileSystemModel(MainWindow* window, QObject *parent)
     : QFileSystemModel(parent), window(window) {
-    qDebug() << "FileModel. FullscreenOn state: " << window->isFullscreenOn();
+    //qDebug() << "FileModel. FullscreenOn state: " << window->isFullscreenOn();
 }
 
 QVariant CustomIconFileSystemModel::data(const QModelIndex &index, int role) const {
