@@ -14,6 +14,7 @@ SOURCES += \
     borderwidget.cpp \
     customiconfilesystemmodel.cpp \
     explorer.cpp \
+    keylistener.cpp \
     main.cpp \
     mainwindow.cpp \
     mediadroparea.cpp \
@@ -25,6 +26,7 @@ HEADERS += \
     borderwidget.hh \
     customiconfilesystemmodel.hh \
     explorer.hh \
+    keylistener.hh \
     mainwindow.hh \
     mediadroparea.hh \
     overlaywindow.hh \

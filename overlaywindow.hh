@@ -18,7 +18,6 @@ public:
     explicit OverlayWindow(MainWindow *parent = nullptr);
 
 protected:
-    bool eventFilter(QObject *watched, QEvent *event) override;
 
 private:
     MainWindow *m_mainWindow;

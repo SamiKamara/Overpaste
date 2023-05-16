@@ -26,6 +26,7 @@
 #include <QSizeGrip>
 #include <QStackedLayout>
 #include <QEvent>
+#include "keylistener.hh"
 
 class OverlayWindow;
 
@@ -36,15 +37,16 @@ class MainWindow : public QWidget
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
-    bool handleOverlayKeyPressEvent(QKeyEvent *event);
+    //bool handleOverlayKeyPressEvent(QKeyEvent *event);
     int storedNormalWindowWidth;
+    void toggleFullscreen();
 
 protected:
     void mousePressEvent(QMouseEvent *event) override;
     void mouseMoveEvent(QMouseEvent *event) override;
     void mouseReleaseEvent(QMouseEvent *event) override;
     void resizeEvent(QResizeEvent *event) override;
-    void keyPressEvent(QKeyEvent *event) override;
+    //void keyPressEvent(QKeyEvent *event) override;
     void dragEnterEvent(QDragEnterEvent *event) override;
     void dragLeaveEvent(QDragLeaveEvent *event) override;
 
@@ -57,10 +59,10 @@ private:
     void onDragFinished();
     bool fullscreenOn;
     OverlayWindow *overlayWindow;
-    void toggleFullscreen();
     void resetWindowGeometry();
     void showMediaDropArea(bool visible);
     MediaDropArea *dropArea;
+    KeyListener m_keyListener;
 };
 
 #endif // MAINWINDOW_HH

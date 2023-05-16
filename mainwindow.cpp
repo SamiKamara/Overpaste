@@ -91,6 +91,9 @@ MainWindow::MainWindow(QWidget *parent)
 
     showMediaDropArea(true);
     setAcceptDrops(true);
+
+    KeyListener *m_keyListener = new KeyListener(this);
+    connect(m_keyListener, &KeyListener::hotKeyPressed, this, &MainWindow::toggleFullscreen);
 }
 
 MainWindow::~MainWindow() {
@@ -210,38 +213,23 @@ QFrame *createGripBar(QWidget *parent) {
     return gripBar;
 }
 
-void MainWindow::keyPressEvent(QKeyEvent *event) {
-    if ((event->modifiers() & Qt::ShiftModifier) && event->key() == Qt::Key_N) {
-        toggleFullscreen();
-    } else {
-        QWidget::keyPressEvent(event);
-    }
-}
-
-bool MainWindow::handleOverlayKeyPressEvent(QKeyEvent *event) {
-    if ((event->modifiers() & Qt::ShiftModifier) && event->key() == Qt::Key_N) {
-        toggleFullscreen();
-        return true;
-    }
-
-    return false;
-}
-
 void MainWindow::toggleFullscreen() {
     fullscreenOn = !fullscreenOn;
 
     if (fullscreenOn) {
-        overlayWindow = new OverlayWindow(this);
+        if (!overlayWindow) {
+            overlayWindow = new OverlayWindow(this);
+        }
         overlayWindow->show();
-
     } else {
-        overlayWindow->close();
-        delete overlayWindow;
-        overlayWindow = nullptr;
+        if (overlayWindow) {
+            overlayWindow->close();
+        }
     }
 
     qDebug() << "Fullscreen mode:" << (fullscreenOn ? "ON" : "OFF");
 }
+
 
 void MainWindow::resetWindowGeometry() {
     if (isMaximized()) {

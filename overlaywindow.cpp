@@ -16,8 +16,6 @@ OverlayWindow::OverlayWindow(MainWindow *parent)
     QRect screenGeometry = screen->geometry();
     resize(screenGeometry.size());
 
-    installEventFilter(this);
-
     m_sidebar = new Sidebar(this);
 
     QSplitter *splitter = new QSplitter(Qt::Horizontal, this);
@@ -41,13 +39,7 @@ OverlayWindow::OverlayWindow(MainWindow *parent)
     mainLayout->addWidget(splitter);
 
     setStyleSheet("background-color: rgba(22, 22, 22, 80);");
-}
 
-bool OverlayWindow::eventFilter(QObject *watched, QEvent *event) {
-    if (watched == this && event->type() == QEvent::KeyPress) {
-        QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
-        return m_mainWindow->handleOverlayKeyPressEvent(keyEvent);
-    }
-
-    return QWidget::eventFilter(watched, event);
+    KeyListener *keyListener = new KeyListener(this);
+    connect(keyListener, &KeyListener::hotKeyPressed, m_mainWindow, &MainWindow::toggleFullscreen);
 }
