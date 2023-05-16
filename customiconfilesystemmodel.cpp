@@ -6,6 +6,7 @@
 #include <QFileInfo>
 #include <QFile>
 #include <QTextStream>
+#include "explorer.hh"
 
 CustomIconFileSystemModel::CustomIconFileSystemModel(MainWindow* window, QObject *parent)
     : QFileSystemModel(parent), window(window) {

@@ -14,8 +14,6 @@
 #include <QEvent>
 #include <QKeyEvent>
 #include <QMessageBox>
-#include "borderdelegate.hh"
-#include "customiconfilesystemmodel.hh"
 #include <QLabel>
 #include "mainwindow.hh"
 #include <QDebug>

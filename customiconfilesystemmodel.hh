@@ -6,7 +6,6 @@
 #include <QIcon>
 #include <QPainter>
 #include <QCache>
-#include "explorer.hh"
 #include "mainwindow.hh"
 #include <QDebug>
 

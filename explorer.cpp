@@ -6,6 +6,8 @@
 #include <QDir>
 #include <QFile>
 #include <QTextStream>
+#include "borderdelegate.hh"
+#include "customiconfilesystemmodel.hh"
 
 Explorer::Explorer(MainWindow* window, QWidget *parent)
     : QWidget(parent), window(window)
