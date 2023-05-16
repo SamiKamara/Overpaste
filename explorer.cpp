@@ -7,8 +7,8 @@
 #include <QFile>
 #include <QTextStream>
 
-Explorer::Explorer(QWidget *parent)
-    : QWidget(parent)
+Explorer::Explorer(MainWindow* window, QWidget *parent)
+    : QWidget(parent), window(window)
 {
     targetFolderId = 0;
 
@@ -18,7 +18,7 @@ Explorer::Explorer(QWidget *parent)
     layout->addWidget(m_listView);
     layout->setContentsMargins(0, 0, 0, 0);
 
-    m_model = new CustomIconFileSystemModel(this);
+    m_model = new CustomIconFileSystemModel(window, this);
     m_model->setFilter(QDir::Files);
     m_model->setHeaderData(0, Qt::Horizontal, "File Explorer");
 
@@ -45,8 +45,8 @@ Explorer::Explorer(QWidget *parent)
     connect(m_listView, &QListView::clicked, this, &Explorer::onFileClicked);
     connect(m_model, &QFileSystemModel::directoryLoaded, this, &Explorer::onDirectoryLoaded);
 
-
     updateModelRootPath();
+    qDebug() << "Expl. FullscreenOn state: " << window->isFullscreenOn();
 }
 
 void Explorer::updateModelRootPath()

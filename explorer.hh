@@ -17,6 +17,8 @@
 #include "borderdelegate.hh"
 #include "customiconfilesystemmodel.hh"
 #include <QLabel>
+#include "mainwindow.hh"
+#include <QDebug>
 
 #ifdef Q_OS_WIN
     #include <windows.h>
@@ -30,7 +32,7 @@ class Explorer : public QWidget
     Q_OBJECT
 
 public:
-    explicit Explorer(QWidget *parent = nullptr);
+    explicit Explorer(MainWindow* window, QWidget *parent = nullptr);
     int targetFolderId;
     static QString resolveShortcut(const QString &filePath);
 
@@ -38,8 +40,8 @@ private:
     QFileSystemModel *m_model;
     QListView *m_listView;
     QLabel *m_emptyLabel;
-
     void updateModelRootPath();
+    MainWindow* window;
 private slots:
     void onFileClicked(const QModelIndex &index);
     void onDirectoryLoaded(const QString &);

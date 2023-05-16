@@ -7,7 +7,9 @@
 #include <QFile>
 #include <QTextStream>
 
-CustomIconFileSystemModel::CustomIconFileSystemModel(QObject *parent) : QFileSystemModel(parent) {
+CustomIconFileSystemModel::CustomIconFileSystemModel(MainWindow* window, QObject *parent)
+    : QFileSystemModel(parent), window(window) {
+    qDebug() << "FileModel. FullscreenOn state: " << window->isFullscreenOn();
 }
 
 QVariant CustomIconFileSystemModel::data(const QModelIndex &index, int role) const {
@@ -34,6 +36,11 @@ QVariant CustomIconFileSystemModel::data(const QModelIndex &index, int role) con
 
 QIcon CustomIconFileSystemModel::generateThumbnail(const QString &filePath) const {
     QPixmap thumbnailPixmap = createThumbnailPixmap(filePath);
+
+    if (window->isFullscreenOn()) {
+        thumbnailPixmap = applyTransparency(thumbnailPixmap, 100);
+    }
+
     QIcon icon(thumbnailPixmap);
     return icon;
 }
@@ -157,6 +164,20 @@ QPixmap CustomIconFileSystemModel::createPixmapFromImage(const QString &filePath
 
     QPixmap pixmap = QPixmap::fromImage(thumbnail);
     return pixmap;
+}
+
+QPixmap CustomIconFileSystemModel::applyTransparency(const QPixmap &pixmap, int alpha) const {
+    QPixmap transparentPixmap(pixmap.size());
+    transparentPixmap.fill(Qt::transparent);
+
+    QPainter painter(&transparentPixmap);
+    painter.setCompositionMode(QPainter::CompositionMode_Source);
+    painter.drawPixmap(0, 0, pixmap);
+    painter.setCompositionMode(QPainter::CompositionMode_DestinationIn);
+    painter.fillRect(transparentPixmap.rect(), QColor(0, 0, 0, alpha));
+    painter.end();
+
+    return transparentPixmap;
 }
 
 

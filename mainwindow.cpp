@@ -22,7 +22,6 @@
 #include <QSplitter>
 #include <mediadroparea.hh>
 #include <borderwidget.hh>
-#include "explorer.hh"
 #include "overlaywindow.hh"
 
 void setupTitleBar(QFrame *titleBar, QWidget *parent);
@@ -32,6 +31,7 @@ QFrame *createGripBar(QWidget *parent);
 MainWindow::MainWindow(QWidget *parent)
     : QWidget(parent)
 {
+    fullscreenOn = false;
     setWindowFlags(Qt::FramelessWindowHint);
     setWindowTitle("Custom Title Bar");
     setStyleSheet("background-color: #282c34;");
@@ -47,7 +47,7 @@ MainWindow::MainWindow(QWidget *parent)
     QWidget *contentWidget = new QWidget(splitter);
     QVBoxLayout *contentLayout = new QVBoxLayout(contentWidget);
 
-    Explorer *explorer = new Explorer(contentWidget);
+    Explorer *explorer = new Explorer(this, contentWidget);
     contentLayout->addWidget(explorer);
 
     connect(sidebar, &Sidebar::imagesButtonClicked, explorer, &Explorer::onImagesButtonClicked);
@@ -86,8 +86,6 @@ MainWindow::MainWindow(QWidget *parent)
     sizeGrip->setStyleSheet("background-color: rgba(105, 105, 105, 0);");
     sizeGrip->move(width() - sizeGrip->width(), height() - sizeGrip->height());
     sizeGrip->raise();
-
-    fullscreenOn = false;
 
     showMediaDropArea(true);
     setAcceptDrops(true);
@@ -264,4 +262,8 @@ void MainWindow::dragEnterEvent(QDragEnterEvent *event) {
 
 void MainWindow::dragLeaveEvent(QDragLeaveEvent *event) {
     event->accept();
+}
+
+bool MainWindow::isFullscreenOn() const {
+    return fullscreenOn;
 }

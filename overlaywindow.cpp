@@ -24,7 +24,7 @@ OverlayWindow::OverlayWindow(MainWindow *parent)
     QWidget *contentWidget = new QWidget(splitter);
     QVBoxLayout *contentLayout = new QVBoxLayout(contentWidget);
 
-    m_explorer = new Explorer(contentWidget);
+    m_explorer = new Explorer(m_mainWindow, contentWidget);
     contentLayout->addWidget(m_explorer);
 
     connect(m_sidebar, &Sidebar::imagesButtonClicked, m_explorer, &Explorer::onImagesButtonClicked);

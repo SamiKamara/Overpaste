@@ -6,14 +6,15 @@
 #include <QIcon>
 #include <QPainter>
 #include <QCache>
-
 #include "explorer.hh"
+#include "mainwindow.hh"
+#include <QDebug>
 
 class CustomIconFileSystemModel : public QFileSystemModel {
     Q_OBJECT
 
 public:
-    CustomIconFileSystemModel(QObject *parent = nullptr);
+    explicit CustomIconFileSystemModel(MainWindow* window, QObject *parent = nullptr);
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 
 private:
@@ -26,8 +27,9 @@ private:
     void drawFileNameOnThumbnail(QPainter &painter, const QString &fileName, int thumbnailSize) const;
     int calculateFontSize(const QString &fileName) const;
     QPixmap createPixmapFromImage(const QString &filePath, int thumbnailSize) const;
-
+    MainWindow* window;
     mutable QCache<QString, QIcon> m_iconCache{500};
+    QPixmap applyTransparency(const QPixmap &pixmap, int alpha) const;
 };
 
 #endif // CUSTOMICONFILESYSTEMMODEL_HH
