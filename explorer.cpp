@@ -26,8 +26,16 @@ Explorer::Explorer(MainWindow* window, QWidget *parent)
 
     m_listView->setModel(m_model);
     m_listView->setViewMode(QListView::IconMode);
-    m_listView->setGridSize(QSize(100, 100));
-    m_listView->setIconSize(QSize(99, 99));
+
+    if(window->isFullscreenOn()){
+        m_listView->setGridSize(QSize(200, 200));
+        m_listView->setIconSize(QSize(199, 199));
+    }
+    else{
+        m_listView->setGridSize(QSize(100, 100));
+        m_listView->setIconSize(QSize(99, 99));
+    }
+
     m_listView->setSpacing(1);
     m_listView->setResizeMode(QListView::Adjust);
     m_listView->setUniformItemSizes(false);

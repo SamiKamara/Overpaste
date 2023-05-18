@@ -47,7 +47,11 @@ QIcon CustomIconFileSystemModel::generateThumbnail(const QString &filePath) cons
 }
 
 QPixmap CustomIconFileSystemModel::createThumbnailPixmap(const QString &filePath) const {
-    static const int thumbnailSize = 100;
+    int thumbnailSize = 100;
+
+    if(window->isFullscreenOn()){
+        thumbnailSize *= 2;
+    }
 
     QFileInfo fileInfo(filePath);
     QString fileSuffix = fileInfo.suffix().toLower();
@@ -125,6 +129,10 @@ void CustomIconFileSystemModel::drawTextOnPixmap(QPainter &painter, const QStrin
 void CustomIconFileSystemModel::drawFileNameOnThumbnail(QPainter &painter, const QString &fileName, int thumbnailSize) const {
     QRect bottomTextRect = QRect(0, thumbnailSize - 20, thumbnailSize, 20);
 
+    if(window->isFullscreenOn()){
+        bottomTextRect = QRect(0, thumbnailSize - 20 * 2, thumbnailSize, 20 * 2);
+    }
+
     QRect barRect(bottomTextRect);
     painter.setBrush(QColor(0, 0, 0, 180));
     painter.setPen(Qt::NoPen);
@@ -140,9 +148,14 @@ void CustomIconFileSystemModel::drawFileNameOnThumbnail(QPainter &painter, const
 }
 
 int CustomIconFileSystemModel::calculateFontSize(const QString &fileName) const {
-    int fontSize = 10;
+    double fontSize = 10.0;
+
+    if(window->isFullscreenOn()){
+        fontSize *= 2;
+    }
+
     if (fileName.length() > 18) {
-        fontSize = static_cast<int>(10.0 * 16.0 / fileName.length());
+        fontSize = static_cast<int>(fontSize * 16.0 / fileName.length());
         if (fontSize < 1) {
             fontSize = 1;
         }
