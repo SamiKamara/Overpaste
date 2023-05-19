@@ -2,10 +2,9 @@
 #include <QFrame>
 #include <QLabel>
 
-QString createLabelStyle() {
+QString Sidebar::createLabelStyle() {
     return
-    "color: #9aa0a6;"
-    "font-size: 10px;"
+    "color: rgba(154, 160, 166, " + getTransparency() + ");"
     "font-weight: 700;"
     "padding: 10px;"
     "text-transform: uppercase;"
@@ -16,16 +15,12 @@ QString createLabelStyle() {
 Sidebar::Sidebar(QWidget *parent)
     : QWidget(parent)
 {
-    bool isParentMainWindow = (parent && parent->objectName() == "MainWindow");
+    isParentMainWindow = (parent && parent->objectName() == "MainWindow");
     qDebug() << "Is parent MainWindow: " << isParentMainWindow;
 
     QFrame *sidebarFrame = new QFrame(this);
 
-    if (!isParentMainWindow) {
-        sidebarFrame->setStyleSheet("background-color: rgba(33, 37, 43, 50%);");
-    }else{
-        sidebarFrame->setStyleSheet("background-color: rgba(33, 37, 43, 100%);");
-    }
+    sidebarFrame->setStyleSheet("background-color: rgba(33, 37, 43, " + getTransparency() + ");");
 
     sidebarLayout = new QVBoxLayout(this);
     sidebarLayout->setContentsMargins(0, 0, 0, 0);
@@ -38,14 +33,14 @@ Sidebar::Sidebar(QWidget *parent)
     const QString buttonStyle =
         "QPushButton {"
         "text-align: left;"
-        "color: rgba(154, 160, 166, " + QString(isParentMainWindow ? "1.0" : "0.8") + ");"
-        "background-color: rgba(33, 37, 43, " + QString(isParentMainWindow ? "1.0" : "0.5") + ");"
+        "color: rgba(154, 160, 166, " + getTransparency() + ");"
+        "background-color: rgba(33, 37, 43, " + getTransparency() + ");"
         "border: none;"
         "padding: 10px;"
         "font-size: 14px;"
         "font-weight: 700;}"
         "QPushButton:hover {"
-        "background-color: #393d47 !important;}"
+        "background-color: rgba(57, 61, 71, " + getTransparency() + ") !important;}"
     ;
 
     sidebarContentLayout->addWidget(
@@ -105,32 +100,36 @@ void Sidebar::updateButtonStyles(int targetFolderId) {
     const QString normalStyle =
         "QPushButton {"
         "text-align: left;"
-        "color: #9aa0a6;"
-        "background-color: #21252b;"
+        "color: rgba(154, 160, 166, " + getTransparency() + ");"
+        "background-color: rgba(33, 37, 43, " + getTransparency() + ");"
         "border: none;"
         "padding: 10px;"
         "font-size: 14px;"
         "font-weight: 700;}"
         "QPushButton:hover {"
-        "background-color: #393d47 !important;}"
-    ;
+        "background-color: rgba(57, 61, 71, " + getTransparency() + ") !important;}"
+        ;
 
-    const QString hoverStyle =
+    const QString selectedStyle =
         "QPushButton {"
         "text-align: left;"
-        "color: #9aa0a6;"
-        "background-color: #393d47;"
+        "color: rgba(154, 160, 166, " + getTransparency() + ");"
+        "background-color: rgba(57, 61, 71, " + getTransparency() + ");"
         "border: none;"
         "padding: 10px;"
         "font-size: 14px;"
         "font-weight: 700;}"
         "QPushButton:hover {"
-        "background-color: #5a5e6a !important;}"
-    ;
+        "background-color: rgba(90, 94, 106, " + getTransparency() + ") !important;}"
+        ;
 
-    allFilesButton->setStyleSheet(targetFolderId == 0 ? hoverStyle : normalStyle);
-    imagesButton->setStyleSheet(targetFolderId == 1 ? hoverStyle : normalStyle);
-    gifsButton->setStyleSheet(targetFolderId == 2 ? hoverStyle : normalStyle);
-    textsButton->setStyleSheet(targetFolderId == 3 ? hoverStyle : normalStyle);
-    videosButton->setStyleSheet(targetFolderId == 4 ? hoverStyle : normalStyle);
+    allFilesButton->setStyleSheet(targetFolderId == 0 ? selectedStyle : normalStyle);
+    imagesButton->setStyleSheet(targetFolderId == 1 ? selectedStyle : normalStyle);
+    gifsButton->setStyleSheet(targetFolderId == 2 ? selectedStyle : normalStyle);
+    textsButton->setStyleSheet(targetFolderId == 3 ? selectedStyle : normalStyle);
+    videosButton->setStyleSheet(targetFolderId == 4 ? selectedStyle : normalStyle);
+}
+
+QString Sidebar::getTransparency() const {
+    return isParentMainWindow ? "1.0" : "0.5";
 }

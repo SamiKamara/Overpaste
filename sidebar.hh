@@ -24,7 +24,9 @@ private:
     QPushButton *gifsButton;
     QPushButton *textsButton;
     QPushButton *videosButton;
-
+    bool isParentMainWindow;
+    QString getTransparency() const;
+    QString createLabelStyle();
 signals:
     void imagesButtonClicked();
     void allFilesButtonClicked();

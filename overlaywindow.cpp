@@ -42,6 +42,7 @@ OverlayWindow::OverlayWindow(MainWindow *parent)
 
     KeyListener *keyListener = new KeyListener(this);
     connect(keyListener, &KeyListener::hotKeyPressed, m_mainWindow, &MainWindow::toggleFullscreen);
+    connect(m_explorer, &Explorer::targetFolderChanged, m_sidebar, &Sidebar::updateButtonStyles);
 
     mainLayout->setContentsMargins(0, 0, 0, 0);
     contentLayout->setContentsMargins(0, 0, 0, 0);
