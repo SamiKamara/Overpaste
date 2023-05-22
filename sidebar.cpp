@@ -1,6 +1,5 @@
 #include "sidebar.hh"
 #include <QFrame>
-#include <QLabel>
 
 QString Sidebar::createLabelStyle() {
     return
@@ -43,10 +42,12 @@ Sidebar::Sidebar(QWidget *parent)
         "background-color: rgba(57, 61, 71, " + getTransparency() + ") !important;}"
     ;
 
-    sidebarContentLayout->addWidget(
-        createButton(" Toggle sidebar", QIcon(":/icons/menu.svg"), buttonStyle));
+    toggleSidebarButton = createButton(" Toggle sidebar", QIcon(":/icons/menu.svg"), buttonStyle);
+    sidebarContentLayout->addWidget(toggleSidebarButton);
 
-    QLabel *filesLabel = new QLabel("Files", this);
+    connect(toggleSidebarButton, &QPushButton::clicked, this, &Sidebar::toggleSidebar);
+
+    filesLabel = new QLabel("Files", this);
     const QString labelStyle = createLabelStyle();
 
     filesLabel->setStyleSheet(labelStyle);
@@ -57,7 +58,7 @@ Sidebar::Sidebar(QWidget *parent)
     connect(allFilesButton, &QPushButton::clicked, this, &Sidebar::allFilesButtonClicked);
     sidebarContentLayout->addWidget(allFilesButton);
 
-    QLabel *categoriesLabel = new QLabel("Categories", this);
+    categoriesLabel = new QLabel("Categories", this);
 
     categoriesLabel->setStyleSheet(labelStyle);
 
@@ -133,3 +134,30 @@ void Sidebar::updateButtonStyles(int targetFolderId) {
 QString Sidebar::getTransparency() const {
     return isParentMainWindow ? "1.0" : "0.5";
 }
+
+void Sidebar::toggleSidebar() {
+    sideBarMaximized = !sideBarMaximized;
+
+    if (!sideBarMaximized) {
+        allFilesButton->setText("");
+        imagesButton->setText("");
+        gifsButton->setText("");
+        textsButton->setText("");
+        videosButton->setText("");
+        toggleSidebarButton->setText("");
+        this->setFixedWidth(44);
+        categoriesLabel->hide();
+        filesLabel->hide();
+    } else {
+        allFilesButton->setText(" All files");
+        imagesButton->setText(" Images");
+        gifsButton->setText(" GIFs");
+        textsButton->setText(" Texts");
+        videosButton->setText(" Videos");
+        toggleSidebarButton->setText(" Toggle sidebar");
+        this->setFixedWidth(250);
+        categoriesLabel->show();
+        filesLabel->show();
+    }
+}
+

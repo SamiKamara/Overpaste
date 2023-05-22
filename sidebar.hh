@@ -8,6 +8,7 @@
 #include <QSpacerItem>
 #include <QStyle>
 #include <QDebug>
+#include <QLabel>
 
 class Sidebar : public QWidget
 {
@@ -15,6 +16,7 @@ class Sidebar : public QWidget
 
 public:
     explicit Sidebar(QWidget *parent = nullptr);
+    void toggleSidebar();
 
 private:
     QVBoxLayout *sidebarLayout;
@@ -24,9 +26,13 @@ private:
     QPushButton *gifsButton;
     QPushButton *textsButton;
     QPushButton *videosButton;
+    QPushButton *toggleSidebarButton;
     bool isParentMainWindow;
     QString getTransparency() const;
     QString createLabelStyle();
+    bool sideBarMaximized = true;
+    QLabel *categoriesLabel;
+    QLabel *filesLabel;
 signals:
     void imagesButtonClicked();
     void allFilesButtonClicked();
