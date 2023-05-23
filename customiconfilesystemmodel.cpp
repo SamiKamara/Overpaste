@@ -10,7 +10,6 @@
 
 CustomIconFileSystemModel::CustomIconFileSystemModel(MainWindow* window, QObject *parent)
     : QFileSystemModel(parent), window(window) {
-    //qDebug() << "FileModel. FullscreenOn state: " << window->isFullscreenOn();
 }
 
 QVariant CustomIconFileSystemModel::data(const QModelIndex &index, int role) const {
@@ -18,13 +17,16 @@ QVariant CustomIconFileSystemModel::data(const QModelIndex &index, int role) con
         QString filePath = QFileSystemModel::data(index, QFileSystemModel::FilePathRole).toString();
         QString resolvedPath = Explorer::resolveShortcut(filePath);
 
-        QIcon *cachedIcon = m_iconCache.object(resolvedPath);
+        QFileInfo fileInfo(resolvedPath);
+        QString fileName = fileInfo.fileName();
+
+        QIcon *cachedIcon = m_iconCache.object(fileName);
         if (cachedIcon) {
             return *cachedIcon;
         }
 
         QIcon thumbnailIcon = generateThumbnail(resolvedPath);
-        m_iconCache.insert(resolvedPath, new QIcon(thumbnailIcon));
+        m_iconCache.insert(fileName, new QIcon(thumbnailIcon));
         return thumbnailIcon;
     }
 
@@ -34,6 +36,7 @@ QVariant CustomIconFileSystemModel::data(const QModelIndex &index, int role) con
 
     return QFileSystemModel::data(index, role);
 }
+
 
 QIcon CustomIconFileSystemModel::generateThumbnail(const QString &filePath) const {
     QPixmap thumbnailPixmap = createThumbnailPixmap(filePath);
