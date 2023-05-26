@@ -93,6 +93,11 @@ MainWindow::MainWindow(QWidget *parent)
 
     KeyListener *m_keyListener = new KeyListener(this);
     connect(m_keyListener, &KeyListener::hotKeyPressed, this, &MainWindow::toggleFullscreen);
+
+    //Dirty way to create cache for icons of the overlaywindow on startup
+    fullscreenOn = true;
+    overlayWindow = new OverlayWindow(this);
+    fullscreenOn = false;
 }
 
 MainWindow::~MainWindow() {
@@ -226,7 +231,7 @@ void MainWindow::toggleFullscreen() {
         }
     }
 
-    qDebug() << "Fullscreen mode:" << (fullscreenOn ? "ON" : "OFF");
+    //qDebug() << "Overlay mode:" << (fullscreenOn ? "ON" : "OFF");
 }
 
 

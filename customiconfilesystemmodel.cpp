@@ -37,7 +37,6 @@ QVariant CustomIconFileSystemModel::data(const QModelIndex &index, int role) con
     return QFileSystemModel::data(index, role);
 }
 
-
 QIcon CustomIconFileSystemModel::generateThumbnail(const QString &filePath) const {
     QPixmap thumbnailPixmap = createThumbnailPixmap(filePath);
 
