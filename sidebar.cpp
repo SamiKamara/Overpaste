@@ -15,7 +15,6 @@ Sidebar::Sidebar(QWidget *parent)
     : QWidget(parent)
 {
     isParentMainWindow = (parent && parent->objectName() == "MainWindow");
-    qDebug() << "Is parent MainWindow: " << isParentMainWindow;
 
     QFrame *sidebarFrame = new QFrame(this);
 

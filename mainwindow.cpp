@@ -230,10 +230,7 @@ void MainWindow::toggleFullscreen() {
             overlayWindow->close();
         }
     }
-
-    //qDebug() << "Overlay mode:" << (fullscreenOn ? "ON" : "OFF");
 }
-
 
 void MainWindow::resetWindowGeometry() {
     if (isMaximized()) {
