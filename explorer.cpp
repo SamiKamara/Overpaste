@@ -120,6 +120,10 @@ void Explorer::onFileClicked(const QModelIndex &index)
         QClipboard *clipboard = QGuiApplication::clipboard();
         clipboard->setMimeData(mimeData);
     }
+
+    if (window && window->isFullscreenOn()) {
+        window->toggleFullscreen();
+    }
 }
 
 QString Explorer::resolveShortcut(const QString &filePath)
