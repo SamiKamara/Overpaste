@@ -6,7 +6,8 @@ KeyListener::KeyListener(QObject *parent)
     : QObject(parent)
 {
 #ifdef Q_OS_WIN
-    RegisterHotKey(NULL, 1, MOD_SHIFT, 0x4E); // 0x4E is the virtual-key code for 'N'
+    // Register the hot key for the '><|' key with the Shift modifier.
+    RegisterHotKey(NULL, 1, MOD_SHIFT, VK_OEM_102);
 #endif
     QCoreApplication::instance()->installNativeEventFilter(this);
 }
