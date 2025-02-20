@@ -23,6 +23,7 @@ private:
     MainWindow *m_mainWindow;
     Explorer *m_explorer;
     Sidebar *m_sidebar;
+    void showEvent(QShowEvent *event);
 };
 
 #endif // OVERLAYWINDOW_HH

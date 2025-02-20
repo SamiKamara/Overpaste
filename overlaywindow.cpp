@@ -2,6 +2,7 @@
 #include <QScreen>
 #include <QApplication>
 #include <QKeyEvent>
+#include <QCursor>
 
 OverlayWindow::OverlayWindow(MainWindow *parent)
     : QWidget(parent), m_mainWindow(parent)
@@ -12,9 +13,16 @@ OverlayWindow::OverlayWindow(MainWindow *parent)
     setAttribute(Qt::WA_TranslucentBackground, true);
     setAttribute(Qt::WA_NoSystemBackground, false);
 
+    //replace the lines under these with these commented out ones to get fullscreen overlay
+    //QScreen *screen = QApplication::primaryScreen();
+    //QRect screenGeometry = screen->geometry();
+    //resize(screenGeometry.size());
+
     QScreen *screen = QApplication::primaryScreen();
     QRect screenGeometry = screen->geometry();
-    resize(screenGeometry.size());
+    int newWidth = screenGeometry.height() / 2;
+    int newHeight = screenGeometry.height() / 2;
+    resize(newWidth, newHeight);
 
     m_sidebar = new Sidebar(this);
 
@@ -47,3 +55,16 @@ OverlayWindow::OverlayWindow(MainWindow *parent)
     mainLayout->setContentsMargins(0, 0, 0, 0);
     contentLayout->setContentsMargins(0, 0, 0, 0);
 }
+
+void OverlayWindow::showEvent(QShowEvent *event)
+{
+    QWidget::showEvent(event);
+    QPoint cursorPos = QCursor::pos();
+    int newX = cursorPos.x() - width() / 2;
+    int newY = cursorPos.y() - height() / 2;
+    move(newX, newY);
+
+    raise();
+    activateWindow();
+}
+
