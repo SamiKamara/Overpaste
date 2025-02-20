@@ -20,6 +20,13 @@ public:
 
 signals:
     void hotKeyPressed();
+
+#ifdef Q_OS_WIN
+private:
+    static LRESULT CALLBACK LowLevelMouseProc(int nCode, WPARAM wParam, LPARAM lParam);
+    static KeyListener* m_instance;
+    HHOOK m_mouseHook;
+#endif
 };
 
 #endif // KEYLISTENER_HH
